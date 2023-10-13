@@ -1,0 +1,35 @@
+.perfil-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .perfil-imagen {
+    width: 15em;
+    height: 1em;
+    margin-left: 2.2em;
+    margin-right: 2.2em;
+  }
+
+  .perfil-info p {
+    margin: 5px 0;
+  }
+
+   .bu ion-button{
+    display: flex;
+    align-items: center;
+    width: 14em;
+    height: 0.5em;
+    font-size: 15px;
+    margin-left: 2.1em;
+    margin-right: 2em;
+
+  }
+  ion-content {
+    // ocultar scroll lateral
+    --offset-bottom: auto!important;
+    --overflow: hidden;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;  
+    }
+  }

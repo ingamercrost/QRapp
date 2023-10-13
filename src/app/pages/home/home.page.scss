@@ -1,0 +1,21 @@
+ion-card-content{
+    text-align: justify;
+}
+
+
+ion-content {
+    // ocultar scroll lateral
+    --offset-bottom: auto!important;
+    --overflow: hidden;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  // .img {
+    
+
+  // }
+
+  

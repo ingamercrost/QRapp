@@ -1,0 +1,30 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" color="dark"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Perfil De Alumno</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list>
+    <ion-item *ngFor="let i of personajes">
+      <ion-card [routerLink]="'/detalleapi/' + i.id">
+        <img src="{{i.image}}" alt="">
+        <ion-card-header>
+          <ion-card-title>{{ i.name }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+
+        </ion-card-content>
+      </ion-card>
+    </ion-item>
+  </ion-list>
+  <div class="bu">
+  <ion-button (click)="cargarMasDatos()" color="warning"> Cargar mas</ion-button>
+  <ion-button (click)="cargarAnteriorPagina()" id="btnAnterior" color="warning">Anterior</ion-button>
+  <ion-button (click)="cargarSiguientePagina()" color="warning">Siguiente</ion-button>
+  </div>
+</ion-content>
+

@@ -1,0 +1,18 @@
+.bot ion-button{
+    width:  70%;
+    height: 4em;
+    color: black;
+    
+    border-radius: 25px;
+
+}
+
+ion-content {
+    // ocultar scroll lateral
+    --offset-bottom: auto!important;
+    --overflow: hidden;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
