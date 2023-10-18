@@ -2,10 +2,12 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+
 export const environment = {
-  production: false,
-  apiURL: "https://qrapp1.onrender.com"
+  production: true,
+  apiURL: 'https://qrapp1.onrender.com'
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file

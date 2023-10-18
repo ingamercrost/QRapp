@@ -1,3 +1,6 @@
 export const environment = {
-  production: true
+  production: false,
+  apiURL: 'https://qrapp1.onrender.com'
 };
+
+
