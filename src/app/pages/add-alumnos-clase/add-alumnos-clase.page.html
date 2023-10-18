@@ -1,0 +1,29 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" color="dark"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Agregar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label>Selecciona un estudiante:</ion-label>
+    <ion-select [(ngModel)]="alumnoSeleccionado">
+      <ion-select-option *ngFor="let alumno of alumnos" [value]="alumno.id">{{ alumno.nombre }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Selecciona una clase:</ion-label>
+    <ion-select [(ngModel)]="claseSeleccionada">
+      <ion-select-option *ngFor="let clase of clases" [value]="clase.id">{{ clase.seccion }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-button expand="full" (click)="agregarAlumnoAClase()">Agregar Estudiante a Clase</ion-button>
+</ion-content>
+
+
+

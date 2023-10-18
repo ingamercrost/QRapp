@@ -6,4 +6,5 @@ export interface Ialumnos {
             correo: String,
             contrasena: String,
             carrera: String
+            clases: number[] 
 }

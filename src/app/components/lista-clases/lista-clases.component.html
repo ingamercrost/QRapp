@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Listado de Clases</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item-group *ngFor="let clase of clases">
+      <ion-item-divider>
+        {{ clase.seccion }}
+      </ion-item-divider>
+      <ion-item *ngFor="let alumnoId of clase.alumnos">
+        {{ getNombreAlumno(alumnoId) }}
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+</ion-content>

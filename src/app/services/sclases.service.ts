@@ -13,22 +13,27 @@ export class SClasesService {
   constructor(private http:HttpClient) { }
 
   ListarClase(): Observable<Iclases>{
-    return this.http.get<Iclases>(`${environment.apiURL}/clase`)
+    return this.http.get<Iclases>(`${environment.apiURL}/clases`)
   }
 
   CrearClase(newClase: Iclase):Observable<Iclase>{
-    return this.http.post<Iclase>(`${environment.apiURL}/clase`, newClase)
+    return this.http.post<Iclase>(`${environment.apiURL}/clases`, newClase)
    }
 
-   getClaseByid(id:Number):Observable<Iclases>{
-    return this.http.get<Iclases>(`${environment.apiURL}/clase/?id=${id}`)
+   getClaseByid(id:String):Observable<Iclases>{
+    return this.http.get<Iclases>(`${environment.apiURL}/clases/?id=${id}`)
    }
 
    actualizarClase(clase:any):Observable<Iclases>{
-    return this.http.put<Iclases>(`${environment.apiURL}/clase/${clase.id}`,clase)
+    return this.http.put<Iclases>(`${environment.apiURL}/clases/${clase.id}`,clase)
    }
 
    eliminarClaseById(clase:any):Observable<Iclases>{
-    return this.http.delete<Iclases>(`${environment.apiURL}/clase/${clase.id}`)
+    return this.http.delete<Iclases>(`${environment.apiURL}/clases/${clase.id}`)
    }
+
+   agregarAlumnoAClase(claseId: string, alumnoId: string): Observable<any> {
+    const url = `${environment.apiURL}/clases/${claseId}/alumnos/${alumnoId}`;
+    return this.http.post(url, null);
+  }
 }

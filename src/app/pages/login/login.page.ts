@@ -27,7 +27,7 @@ export class LoginPage {
 
   ngOnInit() {
     // Obtener los usuarios desde la URL JSON
-    this.http.get('https://aasd-6443-cajw.onrender.com/alumnos').subscribe((data: any) => {
+    this.http.get('https://qrapp1.onrender.com/alumnos').subscribe((data: any) => {
       this.usuarios = data;
     });
   }

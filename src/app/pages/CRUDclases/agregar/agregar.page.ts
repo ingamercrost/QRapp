@@ -13,8 +13,9 @@ export class AgregarPage implements OnInit {
   newClase:Iclase = {
     seccion: "DC007",
     profesor: "Juju",
-    fecha:  new Date(2023, 8, 22),
-    materia: "Programacion web"
+    fecha:  "",
+    materia: "Programacion web",
+    alumnos: []
   }
 
   constructor(

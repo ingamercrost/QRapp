@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiURL: "https://aasd-6443-cajw.onrender.com"
+  apiURL: "https://qrapp1.onrender.com"
 };
 
 /*

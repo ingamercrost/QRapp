@@ -64,6 +64,7 @@ export class AgregarPage implements OnInit {
           correo: results.email,
           contrasena: results.login.password,
           carrera: 'Carrera Aleatoria', 
+          clases : []
         };
 
         // Crea el nuevo alumno
