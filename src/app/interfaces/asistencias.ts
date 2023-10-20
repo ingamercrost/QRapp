@@ -5,3 +5,9 @@ export interface Asistencias {
     profesor: String, // El ID del profesor que registra la asistencia
     alumnos: String[], // Un array de IDs de los alumnos presentes en la clase
   }
+
+  export interface AlumnoAsistencia {
+    alumnoId: string; // Cambia 'id' a 'alumnoId'
+    presente: boolean;
+  }
+  

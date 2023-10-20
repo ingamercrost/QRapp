@@ -3,7 +3,7 @@ import { SasistenciaService } from 'src/app/services/sasistencia.service';
 import { SClasesService } from 'src/app/services/sclases.service';
 import { AlumnosService } from 'src/app/services/alumnos.service';
 import { Router } from '@angular/router';
-import { Asistencia } from 'src/app/interfaces/asistencia';
+import { Asistencia, AlumnoAsistencia } from 'src/app/interfaces/asistencia';
 
 @Component({
   selector: 'app-iniciarclas',
@@ -48,16 +48,17 @@ export class IniciarclasPage implements OnInit {
   }
 
   crearAsistencia() {
-    // Registra la asistencia
     this.asistenciasService.Crearasistencia(this.newAsistencia).subscribe(
       (asistenciaCreada: any) => {
         this.newAsistencia.id = asistenciaCreada.id;
 
-        // Agrega la asistencia a los alumnos
-        this.agregarAsistenciaAAlumnos();
+        const asistenciaAlumnos: AlumnoAsistencia[] = this.alumnosDeClase.map((alumno) => ({
+          alumnoId: alumno.id,
+          presente: this.newAsistencia.alumnos.includes(alumno.id),
+        }));
 
-        // Redirige a la página de listado de clases
-        this.router.navigateByUrl('/listar_clases');
+        this.actualizarAlumnosAsistencia(asistenciaAlumnos);
+
       },
       (error) => {
         console.error('Error al crear la asistencia:', error);
@@ -65,30 +66,24 @@ export class IniciarclasPage implements OnInit {
     );
   }
 
-  agregarAsistenciaAAlumnos() {
-    // Agrega la asistencia a los objetos de alumnos correspondientes
-    this.newAsistencia.alumnos.forEach((alumnoId) => {
-      const alumno = this.alumnos.find((a) => a.id === alumnoId);
+  actualizarAlumnosAsistencia(asistenciaAlumnos: AlumnoAsistencia[]) {
+    asistenciaAlumnos.forEach((asistenciaAlumno) => {
+      const alumno = this.alumnos.find((a) => a.id === asistenciaAlumno.alumnoId);
       if (alumno) {
         if (!alumno.asistencias) {
           alumno.asistencias = [];
         }
-        alumno.asistencias.push({
-          id: this.newAsistencia.id,
-          presente: true, // Puedes modificar esto según corresponda
-        });
+        alumno.asistencias.push(asistenciaAlumno);
 
-        // Llama al servicio para actualizar el alumno
         this.alumnosService.actualizarAlumno(alumno).subscribe(
           () => {
-            console.log('Alumno actualizado con la nueva asistencia');
+            console.log('Asistencia del alumno actualizada');
           },
           (error) => {
-            console.error('Error al actualizar el alumno:', error);
+            console.error('Error al actualizar la asistencia del alumno:', error);
           }
         );
       }
     });
   }
 }
-

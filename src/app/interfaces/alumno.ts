@@ -8,3 +8,8 @@ export interface Alumno {
             clases: number[],
             asistencias: String[]
 }
+
+export interface AlumnoAsistencia {
+    id: string; // El ID del alumno
+    presente: boolean; // true si está presente, false si está ausente
+  }
