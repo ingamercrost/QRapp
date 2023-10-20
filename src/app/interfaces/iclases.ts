@@ -1,5 +1,5 @@
 export interface Iclases {
-    id: number,
+    id: String,
     seccion: String,
     profesor: String,
     fecha: String,

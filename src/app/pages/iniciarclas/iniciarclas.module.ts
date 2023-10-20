@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { IniciarclasPageRoutingModule } from './iniciarclas-routing.module';
 
 import { IniciarclasPage } from './iniciarclas.page';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    IniciarclasPageRoutingModule
+    IniciarclasPageRoutingModule,
+    DatePipe
   ],
   declarations: [IniciarclasPage]
 })

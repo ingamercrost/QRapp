@@ -1,27 +1,40 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-      <ion-buttons slot="start">
-      <ion-back-button defaultHref="/homedocente" color="dark"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Selecciona tu clase</ion-title>
+    <ion-title>
+      Iniciar Clase
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="bot">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Selecciona la clase</ion-title>
-    </ion-toolbar>
-  </ion-header >
-  
-  <ion-button class="button" shape="round" color="warning" [routerLink]="['/cargandoqr']">ARQUITECTURA</ion-button>
-  <ion-button class="button" shape="round" color="warning" [routerLink]="['/cargandoqr']">CALIDAD DE SOFTWARE</ion-button>
-  <ion-button class="button" shape="round" color="warning" [routerLink]="['/cargandoqr']">RELIGION</ion-button>
-  <ion-button class="button" shape="round" color="warning" [routerLink]="['/cargandoqr']">PROGAMACIÓN</ion-button>
-  <ion-button class="button" shape="round" color="warning" [routerLink]="['/cargandoqr']">BASE DE DATOS</ion-button>
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label position="stacked">Clase</ion-label>
+      <ion-select [(ngModel)]="newAsistencia.clase" (ionChange)="cargarAlumnosDeClase()">
+        <ion-select-option *ngFor="let clase of clases" [value]="clase.id">{{clase.seccion}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Fecha</ion-label>
+      <ion-input [(ngModel)]="newAsistencia.fecha" type="date"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Profesor</ion-label>
+      <ion-input [(ngModel)]="newAsistencia.profesor" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Alumnos</ion-label>
+      <ion-select multiple="true" [(ngModel)]="newAsistencia.alumnos">
+        <ion-select-option *ngFor="let alumno of alumnosDeClase" [value]="alumno.id">{{alumno.id}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    
+  </ion-list>
 
-
+  <ion-button expand="full" (click)="crearAsistencia()">Crear Asistencia</ion-button>
 </ion-content>
+
+
 
 
  
