@@ -25,16 +25,10 @@
     <ion-item>
       <ion-label position="stacked">Alumnos</ion-label>
       <ion-select multiple="true" [(ngModel)]="newAsistencia.alumnos">
-        <ion-select-option *ngFor="let alumno of alumnosDeClase" [value]="alumno.id">{{alumno.id}}</ion-select-option>
+        <ion-select-option *ngFor="let alumno of alumnosDeClase" [value]="alumno.id">{{alumno.nombre}}</ion-select-option>
       </ion-select>
     </ion-item>
-    
   </ion-list>
 
   <ion-button expand="full" (click)="crearAsistencia()">Crear Asistencia</ion-button>
 </ion-content>
-
-
-
-
- 

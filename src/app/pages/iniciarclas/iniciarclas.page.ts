@@ -5,7 +5,6 @@ import { AlumnosService } from 'src/app/services/alumnos.service';
 import { Router } from '@angular/router';
 import { Asistencia } from 'src/app/interfaces/asistencia';
 
-
 @Component({
   selector: 'app-iniciarclas',
   templateUrl: './iniciarclas.page.html',
@@ -13,32 +12,29 @@ import { Asistencia } from 'src/app/interfaces/asistencia';
 })
 export class IniciarclasPage implements OnInit {
   newAsistencia: Asistencia = {
-    id : '',
-    clase: '', // Inicialmente vacío
-    profesor: '', // Aquí asigna el ID del profesor
-    fecha: '', // Inicializa la fecha como null
-    alumnos: [] // Inicialmente vacío
+    id: '',
+    clase: '',
+    profesor: '',
+    fecha: '',
+    alumnos: [],
   };
 
   clases: any[] = [];
-  alumnos: any[] = []; // Arreglo de todos los alumnos
-  alumnosDeClase: any[] = []; // Arreglo para almacenar los alumnos de la clase seleccionada
+  alumnos: any[] = [];
+  alumnosDeClase: any[] = [];
 
   constructor(
     private asistenciasService: SasistenciaService,
     private clasesService: SClasesService,
     private alumnosService: AlumnosService,
-    private router: Router,
-  // Inyecta DatePipe
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    // Obtener la lista de clases
     this.clasesService.ListarClase().subscribe((clases: any) => {
       this.clases = clases;
     });
 
-    // Obtener la lista de todos los alumnos
     this.alumnosService.ListarAlumnos().subscribe((alumnos: any) => {
       this.alumnos = alumnos;
     });
@@ -52,8 +48,15 @@ export class IniciarclasPage implements OnInit {
   }
 
   crearAsistencia() {
+    // Registra la asistencia
     this.asistenciasService.Crearasistencia(this.newAsistencia).subscribe(
-      () => {
+      (asistenciaCreada: any) => {
+        this.newAsistencia.id = asistenciaCreada.id;
+
+        // Agrega la asistencia a los alumnos
+        this.agregarAsistenciaAAlumnos();
+
+        // Redirige a la página de listado de clases
         this.router.navigateByUrl('/listar_clases');
       },
       (error) => {
@@ -61,4 +64,31 @@ export class IniciarclasPage implements OnInit {
       }
     );
   }
+
+  agregarAsistenciaAAlumnos() {
+    // Agrega la asistencia a los objetos de alumnos correspondientes
+    this.newAsistencia.alumnos.forEach((alumnoId) => {
+      const alumno = this.alumnos.find((a) => a.id === alumnoId);
+      if (alumno) {
+        if (!alumno.asistencias) {
+          alumno.asistencias = [];
+        }
+        alumno.asistencias.push({
+          id: this.newAsistencia.id,
+          presente: true, // Puedes modificar esto según corresponda
+        });
+
+        // Llama al servicio para actualizar el alumno
+        this.alumnosService.actualizarAlumno(alumno).subscribe(
+          () => {
+            console.log('Alumno actualizado con la nueva asistencia');
+          },
+          (error) => {
+            console.error('Error al actualizar el alumno:', error);
+          }
+        );
+      }
+    });
+  }
 }
+

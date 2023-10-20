@@ -15,7 +15,8 @@ export class AgregarPage implements OnInit {
     profesor: "Juju",
     fecha:  "",
     materia: "Programacion web",
-    alumnos: []
+    alumnos: [],
+    asistencias: []
   }
 
   constructor(

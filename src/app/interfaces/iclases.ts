@@ -4,7 +4,8 @@ export interface Iclases {
     profesor: String,
     fecha: String,
     materia: String,
-    alumnos: String[]
+    alumnos: String[],
+    asistencias: String[]
 }
 
 

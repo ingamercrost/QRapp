@@ -5,5 +5,6 @@ export interface Alumno {
             correo: String,
             contrasena: String,
             carrera: String,
-            clases: number[] 
+            clases: number[],
+            asistencias: String[]
 }
