@@ -62,6 +62,11 @@ export class HomePage implements OnInit {
 
 
 
+  detalle() {
+    this.router.navigate(['/detalle', this.alumno.id]);
+  }
+
+
   perfil() {
     this.router.navigate(['perfil'])
   }

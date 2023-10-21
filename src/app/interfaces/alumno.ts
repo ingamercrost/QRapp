@@ -1,16 +1,17 @@
 export interface Alumno {
-            rut: String,
-            nombre: String,
-            apellido: String,
-            correo: String,
-            contrasena: String,
-            carrera: String,
-            clases: number[],
-            asistencias: number []
+  rut: string;
+  nombre: string;
+  apellido: string;
+  correo: string;
+  contrasena: string;
+  carrera: string;
+  clases: String[];
+  asistencias: Asistencia[];
 }
 
-export interface AlumnoAsistencia {
-    asistenciaid: string;
-    id: string; // El ID del alumno
-    presente: boolean; // true si está presente, false si está ausente
-  }
+export interface Asistencia {
+  asistenciaId: String;
+  alumnoId: String;
+  presente: boolean;
+}
+

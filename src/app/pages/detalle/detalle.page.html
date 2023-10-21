@@ -7,15 +7,42 @@
 </ion-header>
 
 <ion-content>
-
-  <div >
-    <ion-card >
-      <ion-card-header class="centr">
-        <ion-card-title>Detalle</ion-card-title>
-        <ion-card-subtitle>Aca podras ver el detalle de tu registro</ion-card-subtitle>
-      </ion-card-header>
-      <app-detalle-comp nombre="Alex Pavez" rut="21.460.602-k" sede="DuocUC Puente Alto" fechahora="02-02-2023 | 09:40 AM"></app-detalle-comp>
-    </ion-card>
-  </div>
-
+  <ion-card>
+    <ion-card-header class="centr">
+      <ion-card-title>Detalle</ion-card-title>
+      <ion-card-subtitle>Aquí puedes ver los detalles de tu registro</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>Nombre:</ion-label>
+          
+        </ion-item>
+        <ion-item>
+          <ion-label>Apellido:</ion-label>
+        
+        </ion-item>
+        <ion-item>
+          <ion-label>RUT:</ion-label>
+      
+        </ion-item>
+        <ion-item>
+          <ion-label>Correo:</ion-label>
+       
+        </ion-item>
+        <ion-item>
+          <ion-label>Carrera:</ion-label>
+   
+        </ion-item>
+      </ion-list>
+      <div class="asistencias">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Asistencias</ion-card-title>
+          </ion-card-header>
+         
+        </ion-card>
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

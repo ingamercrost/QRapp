@@ -6,5 +6,12 @@ export interface Ialumnos {
             correo: String,
             contrasena: String,
             carrera: String,
-            clases: number[] 
+            clases: String[];
+            asistencias: Asistencia[];
 }
+
+export interface Asistencia {
+    asistenciaId: String;
+    alumnoId: String;
+    presente: boolean;
+  }
