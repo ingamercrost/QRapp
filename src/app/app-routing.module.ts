@@ -28,7 +28,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   },
   {
-    path: 'detalle',
+    path: 'detalle/:id',
     loadChildren: () => import('./pages/detalle/detalle.module').then( m => m.DetallePageModule)
   },
   {
@@ -162,7 +162,8 @@ const routes: Routes = [
   {
     path: 'update_clases/:id',
     loadChildren: () => import('./pages/CRUDclases/update/update.module').then( m => m.UpdatePageModule)
-  },  {
+  },
+  {
     path: 'add-alumnos-clase',
     loadChildren: () => import('./pages/add-alumnos-clase/add-alumnos-clase.module').then( m => m.AddAlumnosClasePageModule)
   },

@@ -6,10 +6,11 @@ export interface Alumno {
             contrasena: String,
             carrera: String,
             clases: number[],
-            asistencias: String[]
+            asistencias: number []
 }
 
 export interface AlumnoAsistencia {
+    asistenciaid: string;
     id: string; // El ID del alumno
     presente: boolean; // true si está presente, false si está ausente
   }

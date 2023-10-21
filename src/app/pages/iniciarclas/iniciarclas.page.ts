@@ -14,7 +14,7 @@ export class IniciarclasPage implements OnInit {
   newAsistencia: Asistencia = {
     id: '',
     clase: '',
-    profesor: '',
+    profesor: '', // Asegúrate de usar el ID del profesor
     fecha: '',
     alumnos: [],
   };
@@ -53,9 +53,11 @@ export class IniciarclasPage implements OnInit {
         this.newAsistencia.id = asistenciaCreada.id;
 
         const asistenciaAlumnos: AlumnoAsistencia[] = this.alumnosDeClase.map((alumno) => ({
-          alumnoId: alumno.id,
+          asistenciaId: this.newAsistencia.id, // Usar el ID de la asistencia creada
+          alumnoId: alumno.id, // Agregar la propiedad 'alumnoId'
           presente: this.newAsistencia.alumnos.includes(alumno.id),
         }));
+        
 
         this.actualizarAlumnosAsistencia(asistenciaAlumnos);
 
