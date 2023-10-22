@@ -4,7 +4,7 @@ import { SClasesService } from 'src/app/services/sclases.service';
 import { AlumnosService } from 'src/app/services/alumnos.service';
 import { Router } from '@angular/router';
 import { Asistencia, AlumnoAsistencia } from 'src/app/interfaces/asistencia';
-import { AlertController } from '@ionic/angular'; 
+import { AlertController } from '@ionic/angular';
 
 
 @Component({
@@ -19,8 +19,9 @@ export class IniciarclasPage implements OnInit {
     profesor: '', // Asegúrate de usar el ID del profesor
     fecha: '',
     alumnos: [],
+    codigoQR: '',
   };
-  codigoQR: string = ''; 
+  codigoQR: string = '';
   clases: any[] = [];
   alumnos: any[] = [];
   alumnosDeClase: any[] = [];
@@ -75,26 +76,21 @@ export class IniciarclasPage implements OnInit {
         {
           text: 'Sí, crear asistencia',
           handler: () => {
-            this.asistenciasService.Crearasistencia(this.newAsistencia).subscribe(
-              (asistenciaCreada: any) => {
-                this.newAsistencia.id = asistenciaCreada.id;
-                const asistenciaAlumnos: AlumnoAsistencia[] = this.alumnosDeClase.map((alumno) => ({
-                  asistenciaId: this.newAsistencia.id,
-                  alumnoId: alumno.id,
-                  presente: this.newAsistencia.alumnos.includes(alumno.id),
-                }));
-                this.actualizarAlumnosAsistencia(asistenciaAlumnos);
+            this.asistenciasService.Crearasistencia(this.newAsistencia).subscribe((asistencia) => {
+              this.newAsistencia.id = asistencia.id;
+            });
+            const asistenciaAlumnos: AlumnoAsistencia[] = this.alumnosDeClase.map((alumno) => ({
+              asistenciaId: this.newAsistencia.id,
+              alumnoId: alumno.id,
+              presente: true,
+            }));
+            this.actualizarAlumnosAsistencia(asistenciaAlumnos);
 
-                // Redirige al usuario a la página "homedocente"
-                this.router.navigate(['/homedocente']);
+            // Redirige al usuario a la página "homedocente"
+            this.router.navigate(['/homedocente']);
 
-                // Muestra un mensaje de éxito
-                this.mostrarMensajeExito();
-              },
-              (error) => {
-                console.error('Error al crear la asistencia:', error);
-              }
-            );
+            // Muestra un mensaje de éxito
+            this.mostrarMensajeExito();
           },
         },
       ],
@@ -103,18 +99,13 @@ export class IniciarclasPage implements OnInit {
     await alert.present();
   }
 
-  async mostrarMensajeExito() {
-    const alert = await this.alertController.create({
-      header: 'Éxito',
-      message: 'Asistencia creada con éxito. ¡Lista pasada!',
-      buttons: ['OK'],
-    });
 
-    await alert.present();
+  generarCodigoQR() {
+    const asistenciaId = this.newAsistencia.id;
+    const codigoQRData = `asistenciaId: ${asistenciaId}, codigoQR: ${this.codigoQR}`;
+    this.codigoQR = codigoQRData;
   }
   
-  
-
   actualizarAlumnosAsistencia(asistenciaAlumnos: AlumnoAsistencia[]) {
     asistenciaAlumnos.forEach((asistenciaAlumno) => {
       const alumno = this.alumnos.find((a) => a.id === asistenciaAlumno.alumnoId);
@@ -123,7 +114,7 @@ export class IniciarclasPage implements OnInit {
           alumno.asistencias = [];
         }
         alumno.asistencias.push(asistenciaAlumno);
-
+  
         this.alumnosService.actualizarAlumno(alumno).subscribe(
           () => {
             console.log('Asistencia del alumno actualizada');
@@ -135,10 +126,14 @@ export class IniciarclasPage implements OnInit {
       }
     });
   }
+  
+  async mostrarMensajeExito() {
+    const alert = await this.alertController.create({
+      header: 'Éxito',
+      message: 'Asistencia creada con éxito. ¡Lista pasada!',
+      buttons: ['OK'],
+    });
 
-  generarCodigoQR() {
-    const asistenciaId = this.newAsistencia.id;
-    const codigoQRData = `asistenciaId: ${asistenciaId}`;
-    this.codigoQR = codigoQRData;
+    await alert.present();
   }
 }

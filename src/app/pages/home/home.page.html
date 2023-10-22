@@ -8,7 +8,7 @@
 
 <ion-content class="hide">
   <div class="img">
-    <img src="assets/img/qr.jpg" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/aa/Logo_DuocUC.svg" />
     <ion-list>
       <ion-item>
         <ion-label>Nombre</ion-label>
@@ -22,9 +22,9 @@
     <ion-button class="margin" (click)="detalle()" shape="round" color="warning">Detalle</ion-button>
     <ion-button class="margin" (click)="asistencia()" shape="round" color="warning">Asistencia</ion-button>
   </div>
+
+  <ngx-scanner-qrcode #action="scanner" (scan)="onScan($event)"></ngx-scanner-qrcode>
 </ion-content>
-
-
 
 <ion-fab class="padd" slot="fixed" vertical="bottom" horizontal="end">
   <ion-fab-button>
@@ -34,10 +34,8 @@
     <ion-fab-button>
       <ion-icon (click)="login()" name="close-circle"></ion-icon>
     </ion-fab-button>
-    <ngx-scanner-qrcode #action="scanner"></ngx-scanner-qrcode>
     <ion-fab-button>
-      <ion-icon (click)="perfil()" name="person"></ion-icon>
+      <ion-icon name="person"></ion-icon>
     </ion-fab-button>
   </ion-fab-list>
 </ion-fab>
-

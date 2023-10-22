@@ -1,7 +1,16 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" color="dark"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalle</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content>
   <ion-card>
     <ion-card-header class="centr">
-      <ion-card-title>Detalle</ion-card-title>
+      <ion-card-title></ion-card-title>
       <ion-card-subtitle>Aquí puedes ver los detalles de tu registro</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
@@ -23,14 +32,6 @@
           {{ alumno.correo }}
         </ion-item>
       </ion-list>
-      <div class="asistencias">
-        <ion-card>
-          <ion-card-header>
-          </ion-card-header>
-          <ion-card-content>
-          </ion-card-content>
-        </ion-card>
-      </div>
     </ion-card-content>
   </ion-card>
 </ion-content>
