@@ -31,6 +31,8 @@ export class AlumnosService {
    eliminarAlumnoById(alumno:any):Observable<Ialumnos>{
     return this.http.delete<Ialumnos>(`${environment.apiURL}/alumnos/${alumno.id}`)
    }
+
+
 }
 
 

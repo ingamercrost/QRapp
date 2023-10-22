@@ -13,7 +13,8 @@ import { QRCodeModule } from 'angularx-qrcode';
 })
 export class IniciarclasPage implements OnInit {
 
-  data: string = 'https://www.youtube.com/watch?v=ulZQTrV8QlQ';
+  dataToEncode: string = 'Tus datos a incrustar';
+
 
   newAsistencia: Asistencia = {
     id: '',
@@ -94,7 +95,11 @@ export class IniciarclasPage implements OnInit {
     });
   }
 
-  // Nuevo código para generar el código QR
+  generarCodigoQR() {
+    const asistenciaId = this.newAsistencia.id;
+    const codigoQRData = `Clase: ${this.newAsistencia.clase}, Profesor: ${this.newAsistencia.profesor}, alumnos: ${this.newAsistencia.alumnos}, asistenciaId: ${asistenciaId}`;
+    this.codigoQR = codigoQRData;
+  }
 
 
   

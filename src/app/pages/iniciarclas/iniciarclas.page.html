@@ -32,10 +32,10 @@
   </ion-list>
 
     <!-- ... (otros elementos HTML) ... -->
-    <qrcode [qrdata]="'https://www.youtube.com/watch?v=yk1J-yg0f_o'"  [errorCorrectionLevel]="'M'"></qrcode>
+    <qrcode [qrdata]="codigoQR"  [errorCorrectionLevel]="'M'"></qrcode>
 
     <!-- ... (otros elementos HTML) ... -->
-
+    <ion-button expand="full" (click)="generarCodigoQR(); crearAsistencia()">Crear Asistencia</ion-button>
 
   <ion-button expand="full" (click)="crearAsistencia()">Crear Asistencia</ion-button>
 </ion-content>

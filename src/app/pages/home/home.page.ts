@@ -60,6 +60,8 @@ export class HomePage implements OnInit {
     )
   }
 
+  
+
 
 
   detalle() {
