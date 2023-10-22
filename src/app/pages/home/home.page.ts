@@ -6,6 +6,11 @@ import { OverlayEventDetail } from '@ionic/core/components';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { AlertController, ToastController } from '@ionic/angular';
 import { AlumnosService } from 'src/app/services/alumnos.service';
+import { NgxScannerQrcodeModule } from 'ngx-scanner-qrcode';
+
+
+
+
 
 @Component({
   selector: 'app-home',
@@ -28,6 +33,15 @@ export class HomePage implements OnInit {
   constructor(private router: Router, public fb: FormBuilder, public alertController: AlertController, private toastController: ToastController,private alumnoServ:AlumnosService) {
 
    }
+
+
+   async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+    });
+    toast.present();
+  }
 
    ngOnInit() {
   }
@@ -58,6 +72,22 @@ export class HomePage implements OnInit {
         }
       }
     )
+  }
+  onScan($event: any) {
+    // Obtener el ID de la asistencia del código QR.
+    const asistenciaId = $event.data.split('asistenciaId: ')[1];
+  
+    // Marcar la asistencia del alumno.
+    this.alumnoServ.marcarAsistencia(this.alumno.id, asistenciaId).subscribe(
+      () => {
+        // Mostrar un mensaje de confirmación.
+        this.presentToast('Asistencia marcada');
+      },
+      (error) => {
+        // Mostrar un mensaje de error.
+        this.presentToast('Error al marcar la asistencia');
+      }
+    );
   }
 
   

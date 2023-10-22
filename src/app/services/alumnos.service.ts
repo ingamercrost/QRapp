@@ -32,7 +32,14 @@ export class AlumnosService {
     return this.http.delete<Ialumnos>(`${environment.apiURL}/alumnos/${alumno.id}`)
    }
 
+   marcarAsistencia(alumnoId: string, asistenciaId: string) {
+    return this.http.post(`${environment.apiURL}/alumnos/marcarAsistencia`, {
+      alumnoId,
+      asistenciaId,
+    });
 
+
+}
 }
 
 

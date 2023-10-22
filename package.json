@@ -30,6 +30,7 @@
     "install": "^0.13.0",
     "ionic": "^4.1.2",
     "ionicons": "^7.0.0",
+    "ngx-scanner-qrcode": "^1.6.4",
     "npm": "^9.8.1",
     "qrcode": "^1.5.3",
     "qrcode-generator": "^1.4.4",

@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { HomePageRoutingModule } from './home-routing.module';
-
+import { NgxScannerQrcodeModule } from 'ngx-scanner-qrcode';
 import { HomePage } from './home.page';
 import { HomeCompComponent } from 'src/app/components/home-comp/home-comp.component';
 
@@ -16,6 +16,7 @@ import { HomeCompComponent } from 'src/app/components/home-comp/home-comp.compon
     IonicModule,
     HomePageRoutingModule,
     ReactiveFormsModule,
+    NgxScannerQrcodeModule
   ],
   declarations: [HomePage, HomeCompComponent]
 })
