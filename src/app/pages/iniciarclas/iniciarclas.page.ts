@@ -4,6 +4,7 @@ import { SClasesService } from 'src/app/services/sclases.service';
 import { AlumnosService } from 'src/app/services/alumnos.service';
 import { Router } from '@angular/router';
 import { Asistencia, AlumnoAsistencia } from 'src/app/interfaces/asistencia';
+import { QRCodeModule } from 'angularx-qrcode';
 
 @Component({
   selector: 'app-iniciarclas',
@@ -11,6 +12,9 @@ import { Asistencia, AlumnoAsistencia } from 'src/app/interfaces/asistencia';
   styleUrls: ['./iniciarclas.page.scss'],
 })
 export class IniciarclasPage implements OnInit {
+
+  data: string = 'https://www.youtube.com/watch?v=ulZQTrV8QlQ';
+
   newAsistencia: Asistencia = {
     id: '',
     clase: '',
@@ -18,7 +22,7 @@ export class IniciarclasPage implements OnInit {
     fecha: '',
     alumnos: [],
   };
-
+  codigoQR: string = ''; 
   clases: any[] = [];
   alumnos: any[] = [];
   alumnosDeClase: any[] = [];
@@ -27,7 +31,8 @@ export class IniciarclasPage implements OnInit {
     private asistenciasService: SasistenciaService,
     private clasesService: SClasesService,
     private alumnosService: AlumnosService,
-    private router: Router
+    private router: Router,
+    private sii : QRCodeModule
   ) {}
 
   ngOnInit(): void {
@@ -46,7 +51,7 @@ export class IniciarclasPage implements OnInit {
       alumno.clases.includes(claseSeleccionada)
     );
   }
-
+  
   crearAsistencia() {
     this.asistenciasService.Crearasistencia(this.newAsistencia).subscribe(
       (asistenciaCreada: any) => {
@@ -88,4 +93,9 @@ export class IniciarclasPage implements OnInit {
       }
     });
   }
+
+  // Nuevo código para generar el código QR
+
+
+  
 }
