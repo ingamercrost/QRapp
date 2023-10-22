@@ -37,8 +37,9 @@ export class AlumnosService {
       alumnoId,
       asistenciaId,
     });
-
-
+}
+getAsistenciasByAlumnoId(alumnoId: string): Observable<any[]> {
+  return this.http.get<any[]>(`${environment.apiURL}/alumnos/${alumnoId}/asistencias`);
 }
 }
 

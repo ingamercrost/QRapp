@@ -40,7 +40,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/ubicacion/ubicacion.module').then( m => m.UbicacionPageModule)
   },
   {
-    path: 'asistencia',
+    path: 'asistencia/:id',
     loadChildren: () => import('./pages/asistencia/asistencia.module').then( m => m.AsistenciaPageModule)
   },
   {

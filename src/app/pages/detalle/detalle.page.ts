@@ -1,8 +1,8 @@
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, NgIterable, OnInit } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
 import { AlumnosService } from 'src/app/services/alumnos.service';
-import { Ialumnos } from 'src/app/interfaces/ialumnos';
+import { Ialumnos, Asistencia } from 'src/app/interfaces/ialumnos';
 
 @Component({
   selector: 'app-detalle',
@@ -11,23 +11,19 @@ import { Ialumnos } from 'src/app/interfaces/ialumnos';
 })
 
 export class DetallePage implements OnInit {
-  
-
   alumno = {
     id: "a",
-    rut:"a",
-    nombre:"a",
-    apellido:"a",
-    correo:"a",
-    contrasena:"",
-    carrera:"a",
-    asistencias: []
+    rut: "a",
+    nombre: "a",
+    apellido: "a",
+    correo: "a",
+    contrasena: "",
+    carrera: "a",
+    asistencias: [] as Asistencia[] // Definir un tipo para asistencias
   }
 
-
-
-
   constructor(
+    private route: ActivatedRoute, // Inyecta ActivatedRoute
     private router: Router,
     private alumnoServ: AlumnosService,
   ) {
@@ -40,6 +36,7 @@ export class DetallePage implements OnInit {
     const alumnoID = this.getIdFromURL();
     this.getAlumnoByID(alumnoID);
   }
+
 
   getIdFromURL() {
     let url = this.router.url;

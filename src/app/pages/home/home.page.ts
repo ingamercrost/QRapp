@@ -93,7 +93,9 @@ export class HomePage implements OnInit {
   }
 
   
-
+  asistencia(){
+    this.router.navigate(['/asistencia', this.alumno.id]);
+  }
 
 
   detalle() {
