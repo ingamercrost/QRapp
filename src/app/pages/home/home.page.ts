@@ -27,7 +27,8 @@ export class HomePage implements OnInit {
     apellido:"a",
     correo:"a",
     contrasena:"",
-    carrera:"a"
+    carrera:"a",
+    asistencias: []
   }
  
   constructor(private router: Router, public fb: FormBuilder, public alertController: AlertController, private toastController: ToastController,private alumnoServ:AlumnosService) {
@@ -68,7 +69,8 @@ export class HomePage implements OnInit {
           apellido: resp[0].apellido,
           correo: resp[0].correo,
           contrasena: resp[0].contrasena,
-          carrera: resp[0].carrera
+          carrera: resp[0].carrera,
+          asistencias: resp[0].asistencias
         }
       }
     )

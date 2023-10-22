@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" color="dark"></ion-back-button>
+      <ion-back-button defaultHref='/home/', alumnoID color="dark"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -16,33 +16,44 @@
       <ion-list>
         <ion-item>
           <ion-label>Nombre:</ion-label>
-          
+          {{ alumno.nombre }}
         </ion-item>
         <ion-item>
           <ion-label>Apellido:</ion-label>
-        
+          {{ alumno.apellido }}
         </ion-item>
         <ion-item>
           <ion-label>RUT:</ion-label>
-      
+          {{ alumno.rut }}
         </ion-item>
         <ion-item>
           <ion-label>Correo:</ion-label>
-       
+          {{ alumno.correo }}
         </ion-item>
         <ion-item>
           <ion-label>Carrera:</ion-label>
-   
+          {{ alumno.carrera }}
         </ion-item>
       </ion-list>
       <div class="asistencias">
-        <ion-card>
+        <ion-card *ngIf="alumno.asistencias && alumno.asistencias.length > 0">
           <ion-card-header>
             <ion-card-title>Asistencias</ion-card-title>
           </ion-card-header>
-         
+          <ion-list>
+            <ion-item *ngFor="let asistencia of alumno.asistencias">
+              <!-- Muestra detalles de asistencia -->
+
+            </ion-item>
+          </ion-list>
+        </ion-card>
+        <ion-card *ngIf="alumno.asistencias && alumno.asistencias.length === 0">
+          <ion-card-content>
+            El alumno no tiene asistencias registradas.
+          </ion-card-content>
         </ion-card>
       </div>
     </ion-card-content>
   </ion-card>
 </ion-content>
+

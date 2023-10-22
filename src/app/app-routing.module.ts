@@ -167,6 +167,28 @@ const routes: Routes = [
     path: 'add-alumnos-clase',
     loadChildren: () => import('./pages/add-alumnos-clase/add-alumnos-clase.module').then( m => m.AddAlumnosClasePageModule)
   },
+  {
+    path: 'listar',
+    loadChildren: () => import('./pages/CRUDprofesores/listar/listar.module').then( m => m.ListarPageModule)
+  },
+  {
+    path: 'modificar/:id',
+    loadChildren: () => import('./pages/CRUDprofesores/modificar/modificar.module').then( m => m.ModificarPageModule)
+  },
+  {
+    path: 'update/:id',
+    loadChildren: () => import('./pages/CRUDprofesores/update/update.module').then( m => m.UpdatePageModule)
+  },
+  {
+    path: 'eliminar/:id',
+    loadChildren: () => import('./pages/CRUDprofesores/eliminar/eliminar.module').then( m => m.EliminarPageModule)
+  },
+  {
+    path: 'agregar-profesor',
+    loadChildren: () => import('./pages/CRUDprofesores/agregar-profesor/agregar-profesor.module').then( m => m.AgregarProfesorPageModule)
+  },
+
+
 
 
 

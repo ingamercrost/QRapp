@@ -1,23 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Alumno } from 'src/app/interfaces/alumno';
-import { AlumnosService } from 'src/app/services/alumnos.service';
+import { Profesor } from 'src/app/interfaces/profesor';
+import { ProfesoresService } from 'src/app/services/profesores.service';
 import { HttpClient } from '@angular/common/http';
 import { UsuariosrandomService } from 'src/app/services/usuariosrandom.service';
 import { AlertController, NavController } from '@ionic/angular'; // Importa AlertController y NavController
 
 @Component({
-  selector: 'app-agregar',
-  templateUrl: './agregar.page.html',
-  styleUrls: ['./agregar.page.scss'],
+  selector: 'app-agregar-profesor',
+  templateUrl: './agregar-profesor.page.html',
+  styleUrls: ['./agregar-profesor.page.scss'],
 })
-export class AgregarPage implements OnInit {
-  newAlumnos: Alumno[] = [];
+export class AgregarProfesorPage implements OnInit {
+  newProfesores: Profesor[] = [];
   user: any;
 
   constructor(
     private usuariosrandom: UsuariosrandomService,
-    private AlumnoServ: AlumnosService,
+    private ProfesorServ: ProfesoresService,
     private router: Router,
     private http: HttpClient,
     public alertController: AlertController, // Agrega AlertController
@@ -34,47 +34,47 @@ export class AgregarPage implements OnInit {
   crearUsuarioAleatorio(user: any) {
     if (user) {
       var usuario = {
+        rut: user.login.username,
         nombre: user.name.first,
+        apellido: user.name.last,
         correo: user.email,
         contrasena: user.login.password,
-        rut: user.login.username,
       };
 
       localStorage.setItem('usuario', JSON.stringify(usuario));
     }
   }
 
-  crearAlumno(alumno: Alumno) {
-    this.AlumnoServ.CrearAlumno(alumno).subscribe(() => {
-      console.log('Nuevo alumno creado');
+  crearProfesor(profesor: Profesor) {
+    this.ProfesorServ.CrearProfesores(profesor).subscribe(() => {
+      console.log('Nuevo profesor creado');
     });
   }
 
-  // Función para obtener datos aleatorios y crear 20 nuevos alumnos
-  obtenerDatosAleatoriosYCrearAlumnos(cantidad: number) {
+  // Función para obtener datos aleatorios y crear 20 nuevos profesores
+  obtenerDatosAleatoriosYCrearProfesores(cantidad: number) {
     for (let i = 0; i < cantidad; i++) {
       this.http.get('https://randomuser.me/api/').subscribe((data: any) => {
         const results = data.results[0];
-        const newAlumno: Alumno = {
-          rut: '123e',
+        const newProfesor: Profesor = {
+          rut: results.login.username,
           nombre: results.name.first,
           apellido: results.name.last,
           correo: results.email,
           contrasena: results.login.password,
-          carrera: 'Carrera Aleatoria',
           clases: [],
           asistencias: [],
         };
 
-        // Crea el nuevo alumno
-        this.crearAlumno(newAlumno);
+        // Crea el nuevo profesor
+        this.crearProfesor(newProfesor);
       });
     }
   }
 
   async crear20Usuarios() {
-    // Llama a la función para obtener datos aleatorios y crear 20 nuevos alumnos
-    this.obtenerDatosAleatoriosYCrearAlumnos(20);
+    // Llama a la función para obtener datos aleatorios y crear 20 nuevos profesores
+    this.obtenerDatosAleatoriosYCrearProfesores(20);
 
     // Muestra una alerta de éxito
     const alert = await this.alertController.create({
@@ -84,7 +84,7 @@ export class AgregarPage implements OnInit {
         {
           text: 'Aceptar',
           handler: () => {
-            // Redirige al usuario a la página de inicio (u otra página)
+            // Redirige al usuario a la página de inicio de docente (homedocente)
             this.navCtrl.navigateForward('/homedocente');
           },
         },

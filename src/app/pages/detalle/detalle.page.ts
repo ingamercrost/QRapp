@@ -11,13 +11,27 @@ import { Ialumnos } from 'src/app/interfaces/ialumnos';
 })
 
 export class DetallePage implements OnInit {
-  alumno: NgIterable<Ialumnos>;
+  
+
+  alumno = {
+    id: "a",
+    rut:"a",
+    nombre:"a",
+    apellido:"a",
+    correo:"a",
+    contrasena:"",
+    carrera:"a",
+    asistencias: []
+  }
+
+
+
 
   constructor(
     private router: Router,
     private alumnoServ: AlumnosService,
   ) {
-    this.alumno = [];
+    
   }
 
   ngOnInit() {}
@@ -34,17 +48,20 @@ export class DetallePage implements OnInit {
     return id;
   }
 
-  getAlumnoByID(alumnoID: string) {
+  getAlumnoByID(alumnoID:String){
     this.alumnoServ.getAlumnoByid(alumnoID).subscribe(
-      (resp: Ialumnos) => {
-        if (resp) {
-          this.alumno = [resp];
-          console.log('Alumno asignado:', this.alumno);
+      (resp:any) => {
+        this.alumno = {
+          id: resp[0].id,
+          rut: resp[0].rut,
+          nombre: resp[0].nombre,
+          apellido: resp[0].apellido,
+          correo: resp[0].correo,
+          contrasena: resp[0].contrasena,
+          carrera: resp[0].carrera,
+          asistencias: resp[0].asistencia
         }
-      },
-      (error) => {
-        console.error('Error al obtener el alumno:', error);
       }
-    );
+    )
   }
 }

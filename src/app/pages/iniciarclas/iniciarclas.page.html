@@ -20,8 +20,10 @@
       <ion-input [(ngModel)]="newAsistencia.fecha" type="date"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked">Profesor</ion-label>
-      <ion-input [(ngModel)]="newAsistencia.profesor" type="text"></ion-input>
+      <ion-item>
+        <ion-label position="stacked">Profesor</ion-label>
+        <ion-input [(ngModel)]="newAsistencia.profesor" type="text" [readonly]="true"></ion-input>
+      </ion-item>
     </ion-item>
     <ion-item>
       <ion-label position="stacked">Alumnos</ion-label>
@@ -35,7 +37,7 @@
     <qrcode [qrdata]="codigoQR"  [errorCorrectionLevel]="'M'"></qrcode>
 
     <!-- ... (otros elementos HTML) ... -->
-    <ion-button expand="full" (click)="generarCodigoQR(); crearAsistencia()">Crear Asistencia</ion-button>
+    <ion-button expand="full" (click)="generarCodigoQR();">Crear Asistencia</ion-button>
 
   <ion-button expand="full" (click)="crearAsistencia()">Crear Asistencia</ion-button>
 </ion-content>

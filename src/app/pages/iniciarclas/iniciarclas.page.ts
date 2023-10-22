@@ -4,7 +4,8 @@ import { SClasesService } from 'src/app/services/sclases.service';
 import { AlumnosService } from 'src/app/services/alumnos.service';
 import { Router } from '@angular/router';
 import { Asistencia, AlumnoAsistencia } from 'src/app/interfaces/asistencia';
-import { QRCodeModule } from 'angularx-qrcode';
+import { AlertController } from '@ionic/angular'; 
+
 
 @Component({
   selector: 'app-iniciarclas',
@@ -12,10 +13,6 @@ import { QRCodeModule } from 'angularx-qrcode';
   styleUrls: ['./iniciarclas.page.scss'],
 })
 export class IniciarclasPage implements OnInit {
-
-  dataToEncode: string = 'Tus datos a incrustar';
-
-
   newAsistencia: Asistencia = {
     id: '',
     clase: '',
@@ -33,7 +30,7 @@ export class IniciarclasPage implements OnInit {
     private clasesService: SClasesService,
     private alumnosService: AlumnosService,
     private router: Router,
-    private sii : QRCodeModule
+    private alertController: AlertController
   ) {}
 
   ngOnInit(): void {
@@ -48,31 +45,75 @@ export class IniciarclasPage implements OnInit {
 
   cargarAlumnosDeClase() {
     const claseSeleccionada = this.newAsistencia.clase;
+
+    // Obtén el ID del profesor asociado a la clase seleccionada
+    const profesorId = this.clases.find((clase) => clase.id === claseSeleccionada)?.profesor;
+
+    // Llena automáticamente el campo "Profesor" con el ID del profesor
+    if (profesorId) {
+      this.newAsistencia.profesor = profesorId;
+    }
+
+    // Filtra los alumnos de la clase
     this.alumnosDeClase = this.alumnos.filter((alumno) =>
       alumno.clases.includes(claseSeleccionada)
     );
   }
-  
-  crearAsistencia() {
-    this.asistenciasService.Crearasistencia(this.newAsistencia).subscribe(
-      (asistenciaCreada: any) => {
-        this.newAsistencia.id = asistenciaCreada.id;
 
-        const asistenciaAlumnos: AlumnoAsistencia[] = this.alumnosDeClase.map((alumno) => ({
-          asistenciaId: this.newAsistencia.id, // Usar el ID de la asistencia creada
-          alumnoId: alumno.id, // Agregar la propiedad 'alumnoId'
-          presente: this.newAsistencia.alumnos.includes(alumno.id),
-        }));
-        
+  async crearAsistencia() {
+    const alert = await this.alertController.create({
+      header: 'Confirmación',
+      message: '¿Quieres crear la asistencia?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+            console.log('Operación cancelada');
+          },
+        },
+        {
+          text: 'Sí, crear asistencia',
+          handler: () => {
+            this.asistenciasService.Crearasistencia(this.newAsistencia).subscribe(
+              (asistenciaCreada: any) => {
+                this.newAsistencia.id = asistenciaCreada.id;
+                const asistenciaAlumnos: AlumnoAsistencia[] = this.alumnosDeClase.map((alumno) => ({
+                  asistenciaId: this.newAsistencia.id,
+                  alumnoId: alumno.id,
+                  presente: this.newAsistencia.alumnos.includes(alumno.id),
+                }));
+                this.actualizarAlumnosAsistencia(asistenciaAlumnos);
 
-        this.actualizarAlumnosAsistencia(asistenciaAlumnos);
+                // Redirige al usuario a la página "homedocente"
+                this.router.navigate(['/homedocente']);
 
-      },
-      (error) => {
-        console.error('Error al crear la asistencia:', error);
-      }
-    );
+                // Muestra un mensaje de éxito
+                this.mostrarMensajeExito();
+              },
+              (error) => {
+                console.error('Error al crear la asistencia:', error);
+              }
+            );
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
+
+  async mostrarMensajeExito() {
+    const alert = await this.alertController.create({
+      header: 'Éxito',
+      message: 'Asistencia creada con éxito. ¡Lista pasada!',
+      buttons: ['OK'],
+    });
+
+    await alert.present();
+  }
+  
+  
 
   actualizarAlumnosAsistencia(asistenciaAlumnos: AlumnoAsistencia[]) {
     asistenciaAlumnos.forEach((asistenciaAlumno) => {
@@ -100,7 +141,4 @@ export class IniciarclasPage implements OnInit {
     const codigoQRData = `Clase: ${this.newAsistencia.clase}, Profesor: ${this.newAsistencia.profesor}, alumnos: ${this.newAsistencia.alumnos}, asistenciaId: ${asistenciaId}`;
     this.codigoQR = codigoQRData;
   }
-
-
-  
 }
