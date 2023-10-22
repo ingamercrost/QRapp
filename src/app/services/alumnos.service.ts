@@ -41,6 +41,16 @@ export class AlumnosService {
 getAsistenciasByAlumnoId(alumnoId: string): Observable<any[]> {
   return this.http.get<any[]>(`${environment.apiURL}/alumnos/${alumnoId}/asistencias`);
 }
+
+actualizarAsistenciaAlumno(alumnoId: string, asistenciaId: string, presente: boolean): Observable<any> {
+  const asistenciaData = {
+    alumnoId,
+    asistenciaId,
+    presente
+  };
+
+  return this.http.put<any>(`${environment.apiURL}/alumnos/asistencias`, asistenciaData);
+}
 }
 
 

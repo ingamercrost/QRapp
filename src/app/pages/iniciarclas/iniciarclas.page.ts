@@ -138,7 +138,7 @@ export class IniciarclasPage implements OnInit {
 
   generarCodigoQR() {
     const asistenciaId = this.newAsistencia.id;
-    const codigoQRData = `Clase: ${this.newAsistencia.clase}, Profesor: ${this.newAsistencia.profesor}, alumnos: ${this.newAsistencia.alumnos}, asistenciaId: ${asistenciaId}`;
+    const codigoQRData = `asistenciaId: ${asistenciaId}`;
     this.codigoQR = codigoQRData;
   }
 }
