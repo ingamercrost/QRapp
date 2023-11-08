@@ -76,26 +76,24 @@ export class IniciarclasPage implements OnInit {
         {
           text: 'Sí, crear asistencia',
           handler: () => {
-            this.asistenciasService.Crearasistencia(this.newAsistencia).subscribe((asistencia) => {
+            this.asistenciasService.Crearasistencia(this.newAsistencia).subscribe((asistencia: any) => {
               this.newAsistencia.id = asistencia.id;
+              this.generarCodigoQR();
+              // Crear una lista de asistenciaAlumnos con el estado "presente" basado en la selección de alumnos
+              const asistenciaAlumnos: AlumnoAsistencia[] = this.alumnosDeClase.map((alumno) => ({
+                asistenciaId: this.newAsistencia.id,
+                alumnoId: alumno.id,
+                presente: this.newAsistencia.alumnos.includes(alumno.id),
+              }));
+              this.actualizarAlumnosAsistencia(asistenciaAlumnos);
+              
+              this.mostrarMensajeExito();
             });
-            const asistenciaAlumnos: AlumnoAsistencia[] = this.alumnosDeClase.map((alumno) => ({
-              asistenciaId: this.newAsistencia.id,
-              alumnoId: alumno.id,
-              presente: true,
-            }));
-            this.actualizarAlumnosAsistencia(asistenciaAlumnos);
-
-            // Redirige al usuario a la página "homedocente"
-            this.router.navigate(['/homedocente']);
-
-            // Muestra un mensaje de éxito
-            this.mostrarMensajeExito();
           },
         },
       ],
     });
-
+  
     await alert.present();
   }
 
@@ -130,7 +128,7 @@ export class IniciarclasPage implements OnInit {
   async mostrarMensajeExito() {
     const alert = await this.alertController.create({
       header: 'Éxito',
-      message: 'Asistencia creada con éxito. ¡Lista pasada!',
+      message: 'Los alumnos seleccionados quedaron presentes, ahora se generara el codigo QR',
       buttons: ['OK'],
     });
 
