@@ -5,6 +5,7 @@ import { AlumnosService } from 'src/app/services/alumnos.service';
 import { HttpClient } from '@angular/common/http';
 import { UsuariosrandomService } from 'src/app/services/usuariosrandom.service';
 import { AlertController, NavController } from '@ionic/angular'; // Importa AlertController y NavController
+import { AngularFirestore } from '@angular/fire/compat/firestore'; // Importa el servicio AngularFirestore
 
 @Component({
   selector: 'app-agregar',
@@ -12,6 +13,7 @@ import { AlertController, NavController } from '@ionic/angular'; // Importa Aler
   styleUrls: ['./agregar.page.scss'],
 })
 export class AgregarPage implements OnInit {
+
   newAlumnos: Alumno[] = [];
   user: any;
 
@@ -21,7 +23,8 @@ export class AgregarPage implements OnInit {
     private router: Router,
     private http: HttpClient,
     public alertController: AlertController, // Agrega AlertController
-    private navCtrl: NavController // Agrega NavController
+    private navCtrl: NavController, // Agrega NavController
+    private firestore: AngularFirestore // Inyecta el servicio AngularFirestore
   ) {}
 
   ngOnInit() {
@@ -45,7 +48,8 @@ export class AgregarPage implements OnInit {
   }
 
   crearAlumno(alumno: Alumno) {
-    this.AlumnoServ.CrearAlumno(alumno).subscribe(() => {
+    // Usa AngularFirestore para crear un nuevo documento de alumno en la base de datos de Firestore
+    this.firestore.collection<Alumno>('alumnos').add(alumno).then(() => {
       console.log('Nuevo alumno creado');
     });
   }
