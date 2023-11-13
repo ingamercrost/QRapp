@@ -1,4 +1,5 @@
 export interface Alumno {
+  id : string
   rut: string;
   nombre: string;
   apellido: string;

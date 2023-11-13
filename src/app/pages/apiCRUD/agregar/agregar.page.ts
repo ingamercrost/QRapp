@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Alumno } from 'src/app/interfaces/alumno';
-import { AlumnosService } from 'src/app/services/alumnos.service';
-import { HttpClient } from '@angular/common/http';
 import { UsuariosrandomService } from 'src/app/services/usuariosrandom.service';
-import { AlertController, NavController } from '@ionic/angular'; // Importa AlertController y NavController
-import { AngularFirestore } from '@angular/fire/compat/firestore'; // Importa el servicio AngularFirestore
+import { AlertController, NavController } from '@ionic/angular';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-agregar',
@@ -19,12 +17,10 @@ export class AgregarPage implements OnInit {
 
   constructor(
     private usuariosrandom: UsuariosrandomService,
-    private AlumnoServ: AlumnosService,
     private router: Router,
-    private http: HttpClient,
-    public alertController: AlertController, // Agrega AlertController
-    private navCtrl: NavController, // Agrega NavController
-    private firestore: AngularFirestore // Inyecta el servicio AngularFirestore
+    public alertController: AlertController,
+    private navCtrl: NavController,
+    private firestore: AngularFirestore
   ) {}
 
   ngOnInit() {
@@ -36,7 +32,7 @@ export class AgregarPage implements OnInit {
 
   crearUsuarioAleatorio(user: any) {
     if (user) {
-      var usuario = {
+      const usuario = {
         nombre: user.name.first,
         correo: user.email,
         contrasena: user.login.password,
@@ -49,15 +45,23 @@ export class AgregarPage implements OnInit {
 
   crearAlumno(alumno: Alumno) {
     // Usa AngularFirestore para crear un nuevo documento de alumno en la base de datos de Firestore
-    this.firestore.collection<Alumno>('alumnos').add(alumno).then(() => {
-      console.log('Nuevo alumno creado');
+    const docRef = this.firestore.collection<Alumno>('alumnos').add(alumno);
+  
+    // Actualiza el objeto Alumno con el ID generado
+    docRef.then((doc) => {
+      alumno.id = doc.id;
+  
+      // Actualiza la base de datos con el objeto Alumno que ahora contiene el ID
+      this.firestore.collection<Alumno>('alumnos').doc(alumno.id).update({ id: alumno.id }).then(() => {
+        console.log('Nuevo alumno creado con ID:', alumno.id);
+      });
     });
   }
+  
 
-  // Función para obtener datos aleatorios y crear 20 nuevos alumnos
   obtenerDatosAleatoriosYCrearAlumnos(cantidad: number) {
     for (let i = 0; i < cantidad; i++) {
-      this.http.get('https://randomuser.me/api/').subscribe((data: any) => {
+      this.usuariosrandom.getRandomUser().subscribe((data: any) => {
         const results = data.results[0];
         const newAlumno: Alumno = {
           rut: '123e',
@@ -68,6 +72,7 @@ export class AgregarPage implements OnInit {
           carrera: 'Carrera Aleatoria',
           clases: [],
           asistencias: [],
+          id: ''
         };
 
         // Crea el nuevo alumno
@@ -78,7 +83,7 @@ export class AgregarPage implements OnInit {
 
   async crear20Usuarios() {
     // Llama a la función para obtener datos aleatorios y crear 20 nuevos alumnos
-    this.obtenerDatosAleatoriosYCrearAlumnos(20);
+    this.obtenerDatosAleatoriosYCrearAlumnos(5);
 
     // Muestra una alerta de éxito
     const alert = await this.alertController.create({

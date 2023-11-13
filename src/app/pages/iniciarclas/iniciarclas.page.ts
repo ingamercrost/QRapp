@@ -42,21 +42,15 @@ export class IniciarclasPage implements OnInit {
   cargarAlumnosDeClase() {
     const claseSeleccionada = this.newAsistencia.clase;
 
-    // Obtén la información de la clase seleccionada
     const claseSeleccionadaInfo = this.clases.find((clase) => clase.id === claseSeleccionada);
 
-    // Verifica si se encontró la clase
     if (claseSeleccionadaInfo) {
-      // Asigna el profesor de la clase a newAsistencia.profesor
       this.newAsistencia.profesor = claseSeleccionadaInfo.profesor;
-
-      // Filtra los alumnos de la clase
       this.alumnosDeClase = this.alumnos.filter((alumno) =>
         alumno.clases.includes(claseSeleccionada)
       );
     } else {
       console.error('La clase no existe en la base de datos.');
-      // Maneja este caso según tus necesidades, por ejemplo, mostrar un mensaje al usuario.
     }
   }
 
@@ -105,23 +99,21 @@ export class IniciarclasPage implements OnInit {
   actualizarAlumnosAsistencia(asistenciaAlumnos: AlumnoAsistencia[]) {
     asistenciaAlumnos.forEach((asistenciaAlumno) => {
       const alumno = this.alumnos.find((a) => a.id === asistenciaAlumno.alumnoId);
-      if (alumno) {
-        if (!alumno.asistencias) {
-          alumno.asistencias = [];
-        }
+      if (alumno && asistenciaAlumno.alumnoId) {
         alumno.asistencias.push(asistenciaAlumno);
 
-        // Actualiza el documento del estudiante en Firestore
         this.firestore.collection('alumnos').doc(alumno.id).update({
           asistencias: alumno.asistencias,
         }).then(
           () => {
-            console.log('Asistencia del alumno actualizada');
+            console.log('Asistencia del alumno actualizada con éxito');
           },
           (error) => {
-            console.error('Error al actualizar la asistencia del alumno:', error);
+            console.log('Error al actualizar la asistencia del alumno:', error);
           }
         );
+      } else {
+        console.warn('Se descartó la asistencia del alumno', asistenciaAlumno);
       }
     });
   }

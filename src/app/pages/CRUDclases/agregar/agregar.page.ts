@@ -62,13 +62,22 @@ await alert.present();
 
 crearClase() {
     // Usa AngularFirestore para crear un nuevo documento de clase en la base de datos de Firestore
-    this.firestore.collection<Iclase>('clases').add(this.newClase).then((docRef) => {
-      // docRef.id contiene el ID del documento recién agregado
-      this.newClase.id = docRef.id;
+    const docRef = this.firestore.collection<Iclase>('clases').add(this.newClase);
   
-      this.mostrarMensajeExito(); // Llama a la función para mostrar el mensaje de éxito
+    // Obtén el ID asignado al documento recién creado
+    docRef.then((doc) => {
+      // Asigna el ID al objeto Iclase
+      this.newClase.id = doc.id;
+  
+      // Actualiza la base de datos con el objeto Iclase que ahora contiene el ID
+      this.firestore.collection<Iclase>('clases').doc(this.newClase.id).update({ id: this.newClase.id }).then(() => {
+        console.log('Nueva clase creada con ID:', this.newClase.id);
+  
+        this.mostrarMensajeExito(); // Llama a la función para mostrar el mensaje de éxito
+      });
     });
   }
+  
   
   
   
