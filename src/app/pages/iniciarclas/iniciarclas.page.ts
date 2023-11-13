@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { SasistenciaService } from 'src/app/services/sasistencia.service';
-import { SClasesService } from 'src/app/services/sclases.service';
-import { AlumnosService } from 'src/app/services/alumnos.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { Asistencia, AlumnoAsistencia } from 'src/app/interfaces/asistencia';
 import { AlertController } from '@ionic/angular';
-
 
 @Component({
   selector: 'app-iniciarclas',
@@ -16,7 +13,7 @@ export class IniciarclasPage implements OnInit {
   newAsistencia: Asistencia = {
     id: '',
     clase: '',
-    profesor: '', // Asegúrate de usar el ID del profesor
+    profesor: '',
     fecha: '',
     alumnos: [],
     codigoQR: '',
@@ -27,19 +24,17 @@ export class IniciarclasPage implements OnInit {
   alumnosDeClase: any[] = [];
 
   constructor(
-    private asistenciasService: SasistenciaService,
-    private clasesService: SClasesService,
-    private alumnosService: AlumnosService,
+    private firestore: AngularFirestore,
     private router: Router,
     private alertController: AlertController
   ) {}
 
   ngOnInit(): void {
-    this.clasesService.ListarClase().subscribe((clases: any) => {
+    this.firestore.collection('clases').valueChanges().subscribe((clases: any) => {
       this.clases = clases;
     });
 
-    this.alumnosService.ListarAlumnos().subscribe((alumnos: any) => {
+    this.firestore.collection('alumnos').valueChanges().subscribe((alumnos: any) => {
       this.alumnos = alumnos;
     });
   }
@@ -47,18 +42,22 @@ export class IniciarclasPage implements OnInit {
   cargarAlumnosDeClase() {
     const claseSeleccionada = this.newAsistencia.clase;
 
-    // Obtén el ID del profesor asociado a la clase seleccionada
-    const profesorId = this.clases.find((clase) => clase.id === claseSeleccionada)?.profesor;
+    // Obtén la información de la clase seleccionada
+    const claseSeleccionadaInfo = this.clases.find((clase) => clase.id === claseSeleccionada);
 
-    // Llena automáticamente el campo "Profesor" con el ID del profesor
-    if (profesorId) {
-      this.newAsistencia.profesor = profesorId;
+    // Verifica si se encontró la clase
+    if (claseSeleccionadaInfo) {
+      // Asigna el profesor de la clase a newAsistencia.profesor
+      this.newAsistencia.profesor = claseSeleccionadaInfo.profesor;
+
+      // Filtra los alumnos de la clase
+      this.alumnosDeClase = this.alumnos.filter((alumno) =>
+        alumno.clases.includes(claseSeleccionada)
+      );
+    } else {
+      console.error('La clase no existe en la base de datos.');
+      // Maneja este caso según tus necesidades, por ejemplo, mostrar un mensaje al usuario.
     }
-
-    // Filtra los alumnos de la clase
-    this.alumnosDeClase = this.alumnos.filter((alumno) =>
-      alumno.clases.includes(claseSeleccionada)
-    );
   }
 
   async crearAsistencia() {
@@ -76,34 +75,33 @@ export class IniciarclasPage implements OnInit {
         {
           text: 'Sí, crear asistencia',
           handler: () => {
-            this.asistenciasService.Crearasistencia(this.newAsistencia).subscribe((asistencia: any) => {
-              this.newAsistencia.id = asistencia.id;
+            this.firestore.collection('asistencias').add(this.newAsistencia).then((asistenciaRef) => {
+              this.newAsistencia.id = asistenciaRef.id;
               this.generarCodigoQR();
-              // Crear una lista de asistenciaAlumnos con el estado "presente" basado en la selección de alumnos
+
               const asistenciaAlumnos: AlumnoAsistencia[] = this.alumnosDeClase.map((alumno) => ({
                 asistenciaId: this.newAsistencia.id,
                 alumnoId: alumno.id,
                 presente: this.newAsistencia.alumnos.includes(alumno.id),
               }));
+
               this.actualizarAlumnosAsistencia(asistenciaAlumnos);
-              
               this.mostrarMensajeExito();
             });
           },
         },
       ],
     });
-  
+
     await alert.present();
   }
-
 
   generarCodigoQR() {
     const asistenciaId = this.newAsistencia.id;
     const codigoQRData = `asistenciaId: ${asistenciaId}, codigoQR: ${this.codigoQR}`;
     this.codigoQR = codigoQRData;
   }
-  
+
   actualizarAlumnosAsistencia(asistenciaAlumnos: AlumnoAsistencia[]) {
     asistenciaAlumnos.forEach((asistenciaAlumno) => {
       const alumno = this.alumnos.find((a) => a.id === asistenciaAlumno.alumnoId);
@@ -112,8 +110,11 @@ export class IniciarclasPage implements OnInit {
           alumno.asistencias = [];
         }
         alumno.asistencias.push(asistenciaAlumno);
-  
-        this.alumnosService.actualizarAlumno(alumno).subscribe(
+
+        // Actualiza el documento del estudiante en Firestore
+        this.firestore.collection('alumnos').doc(alumno.id).update({
+          asistencias: alumno.asistencias,
+        }).then(
           () => {
             console.log('Asistencia del alumno actualizada');
           },
@@ -124,11 +125,11 @@ export class IniciarclasPage implements OnInit {
       }
     });
   }
-  
+
   async mostrarMensajeExito() {
     const alert = await this.alertController.create({
       header: 'Éxito',
-      message: 'Los alumnos seleccionados quedaron presentes, ahora se generara el codigo QR',
+      message: 'Los alumnos seleccionados quedaron presentes, ahora se generará el código QR',
       buttons: ['OK'],
     });
 

@@ -19,7 +19,8 @@ profesor: "",
 fecha: "",
 materia: "Programación web",
 alumnos: [],
-asistencias: []
+asistencias: [],
+id: ""
 }
 
 profesoresDisponibles: any[] = [];
@@ -60,9 +61,15 @@ await alert.present();
 }
 
 crearClase() {
-// Usa AngularFirestore para crear un nuevo documento de clase en la base de datos de Firestore
-this.firestore.collection<Iclase>('clases').add(this.newClase).then(() => {
-this.mostrarMensajeExito(); // Llama a la función para mostrar el mensaje de éxito
-});
-}
+    // Usa AngularFirestore para crear un nuevo documento de clase en la base de datos de Firestore
+    this.firestore.collection<Iclase>('clases').add(this.newClase).then((docRef) => {
+      // docRef.id contiene el ID del documento recién agregado
+      this.newClase.id = docRef.id;
+  
+      this.mostrarMensajeExito(); // Llama a la función para mostrar el mensaje de éxito
+    });
+  }
+  
+  
+  
 }
