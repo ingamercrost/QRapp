@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { ReactiveFormsModule } from '@angular/forms'; // Asegúrate de importar ReactiveFormsModule
+import { ReactiveFormsModule } from '@angular/forms';
 import { QRCodeModule } from 'angularx-qrcode';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -13,11 +13,13 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from 'src/environments/environment';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 
-
-
-
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 LOAD_WASM().subscribe((res: any) => console.log('LOAD_WASM', res));
+
+// Configuración para cargar las traducciones desde la carpeta 'assets/i18n/'
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,15 +28,27 @@ LOAD_WASM().subscribe((res: any) => console.log('LOAD_WASM', res));
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule, // Asegúrate de agregar ReactiveFormsModule en los imports
-    QRCodeModule, // Agrega el módulo QRCodeModule en los imports
+    ReactiveFormsModule,
+    QRCodeModule,
     NgxScannerQrcodeModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
+      defaultLanguage: 'en',
+    }),
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
+
+
 export class AppModule {}
+export function HttpLoaderFactory(httpClient: HttpClient) {
+  return new TranslateHttpLoader(httpClient, "../assets/i18n/" ,".json");
+}

@@ -26,6 +26,8 @@
     "@capacitor/cli": "^5.5.0",
     "@capacitor/core": "^5.5.0",
     "@ionic/angular": "^7.0.0",
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "^8.0.0",
     "angularx-qrcode": "^16.0.2",
     "animate.css": "^4.1.1",
     "install": "^0.13.0",

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AlertController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -12,18 +13,23 @@ import { AlertController } from '@ionic/angular';
 export class LoginPage {
   loginForm: FormGroup;
   usuarios: any[] = []; // Inicializa el arreglo vacío
+  idioma!: string;
+  langs: string[] = [];
 
   constructor(
     private router: Router,
     private http: HttpClient,
     private formBuilder: FormBuilder,
-    public alertController: AlertController
+    public alertController: AlertController,
+    private translateService: TranslateService
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(1)]]
     });
+    this.langs = this.translateService.getLangs();
   }
+  
 
   ngOnInit() {
     // Obtener los usuarios desde la URL JSON

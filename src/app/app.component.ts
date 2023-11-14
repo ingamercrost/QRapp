@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -14,5 +17,12 @@ export class AppComponent {
     { title: 'Crud', url: 'crud', icon: 'people' },
   ];
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
-  constructor() {}
+
+  constructor(private router: Router, private translateService: TranslateService) {
+    this.translateService.setDefaultLang('en');
+    this.translateService.addLangs(['es']);
+  }
+
+
+  
 }
