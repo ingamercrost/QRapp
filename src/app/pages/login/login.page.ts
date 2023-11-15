@@ -6,8 +6,6 @@ import { AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
 
-
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -15,18 +13,28 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class LoginPage {
   loginForm: FormGroup;
+  idioma!: string;
+  langs: string[] = [];
+
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private afAuth: AngularFireAuth,
     public alertController: AlertController,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private authService: AuthService
+    
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(1)]],
     });
+
+    this.langs = this.translateService.getLangs();
+    this.translateService.setDefaultLang('en');
+    this.translateService.addLangs(['es']);
+    
   }
 
   async login() {
@@ -41,11 +49,15 @@ export class LoginPage {
       this.router.navigate(['/home/', user?.uid]);
     } catch (error) {
       const alert = await this.alertController.create({
-        header: 'Datos incorrectos',
-        message: 'Los datos son incorrectos o no se encuentran datos',
+        header: this.translateService.instant('datos_incorrectos'),
+        message: this.translateService.instant('datos_incorrectos_msg'),
         buttons: ['Aceptar'],
       });
       await alert.present();
     }
+  }
+
+  changeLanguage(language: string) {
+    this.translateService.use(language);
   }
 }
