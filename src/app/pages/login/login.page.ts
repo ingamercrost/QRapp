@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from 'src/app/services/auth.service';
+
+
 
 @Component({
   selector: 'app-login',
@@ -12,57 +15,37 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class LoginPage {
   loginForm: FormGroup;
-  usuarios: any[] = []; // Inicializa el arreglo vacío
-  idioma!: string;
-  langs: string[] = [];
 
   constructor(
     private router: Router,
-    private http: HttpClient,
     private formBuilder: FormBuilder,
+    private afAuth: AngularFireAuth,
     public alertController: AlertController,
     private translateService: TranslateService
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(1)]]
-    });
-    this.langs = this.translateService.getLangs();
-  }
-  
-
-  ngOnInit() {
-    // Obtener los usuarios desde la URL JSON
-    this.http.get('https://qrapp1.onrender.com/alumnos').subscribe((data: any) => {
-      this.usuarios = data;
+      password: ['', [Validators.required, Validators.minLength(1)]],
     });
   }
 
   async login() {
-    var u = this.loginForm.value;
+    const { email, password } = this.loginForm.value;
 
-    console.log('Valores del formulario:');
-    console.log(u);
+    try {
+      const userCredential = await this.afAuth.signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
 
-    if (this.usuarios) {
-      const usuarioEncontrado = this.usuarios.find((usuario: any) => usuario.correo === u.email && usuario.contrasena === u.password);
-
-      if (usuarioEncontrado) {
-        console.log('Ingresado');
-        localStorage.setItem('ingresado', 'true');
-        this.router.navigate(['/home/', usuarioEncontrado.id]);
-        console.log(this.router.navigate(['/home/', usuarioEncontrado.id]));
-      } else {
-        const alert = await this.alertController.create({
-          header: 'Datos incorrectos',
-          message: 'Los datos son incorrectos o no se encuentran datos',
-          buttons: ['Aceptar']
-        });
-        await alert.present();
-      }
-    } else {
-      // Manejo de caso cuando no se encuentra el valor en la URL JSON
+      console.log('Ingresado', user);
+      localStorage.setItem('ingresado', 'true');
+      this.router.navigate(['/home/', user?.uid]);
+    } catch (error) {
+      const alert = await this.alertController.create({
+        header: 'Datos incorrectos',
+        message: 'Los datos son incorrectos o no se encuentran datos',
+        buttons: ['Aceptar'],
+      });
+      await alert.present();
     }
   }
 }
-

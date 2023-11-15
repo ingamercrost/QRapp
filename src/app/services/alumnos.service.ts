@@ -4,7 +4,7 @@ import { Ialumnos } from '../interfaces/ialumnos';
 import { Alumno } from '../interfaces/alumno';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 
 
@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AlumnosService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient,private firestore: AngularFirestore) { }
 
   ListarAlumnos(): Observable<Ialumnos>{
     return this.http.get<Ialumnos>(`${environment.apiURL}/alumnos`)
@@ -54,6 +54,16 @@ actualizarAsistenciaAlumno(alumnoId: string, asistenciaId: string, presente: boo
 
   return this.http.put<any>(`${environment.apiURL}/alumnos/asistencias`, asistenciaData);
 }
+
+  getAlumnoByCorreo(correo: string): Observable<any> {
+    // Utiliza AngularFirestore para buscar el alumno por su correo en Firestore
+    // Aquí asumo que tienes una colección 'alumnos' en tu base de datos
+    // y que el campo 'correo' se utiliza para buscar al alumno
+    return this.firestore
+      .collection('alumnos', (ref) => ref.where('correo', '==', correo))
+      .valueChanges();
+  }
 }
+
 
 

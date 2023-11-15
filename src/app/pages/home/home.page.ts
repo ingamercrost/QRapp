@@ -1,15 +1,11 @@
 import { Router } from '@angular/router';
-import { Component, ViewChild, OnInit, NgZone, Inject  } from '@angular/core';
-import { IonModal } from '@ionic/angular';
-import { OverlayEventDetail } from '@ionic/core/components';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { AlertController, ToastController } from '@ionic/angular';
-import { AlumnosService } from 'src/app/services/alumnos.service';
+import { Component, OnInit, NgZone, Inject } from '@angular/core';
 import { NgxScannerQrcodeService } from 'ngx-scanner-qrcode';
-
-
-
-
+import { AlumnosService } from 'src/app/services/alumnos.service';
+import { AlertController, ToastController } from '@ionic/angular';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Observable } from 'rxjs/internal/Observable';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-home',
@@ -18,26 +14,19 @@ import { NgxScannerQrcodeService } from 'ngx-scanner-qrcode';
 })
 export class HomePage implements OnInit {
   isModalOpen = false;
+  alumno: any;
+  authService: any;
 
-  alumno = {
-    id: "a",
-    rut:"a",
-    nombre:"a",
-    apellido:"a",
-    correo:"a",
-    contrasena:"",
-    carrera:"a",
-    asistencias: []
-  }
-
+  
   constructor(
     @Inject(NgxScannerQrcodeService) private qrcode: NgxScannerQrcodeService,
     private router: Router,
-    public fb: FormBuilder,
     public alertController: AlertController,
     private toastController: ToastController,
     private alumnoServ: AlumnosService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private afAuth: AngularFireAuth,
+    private firestore : AngularFirestore
   ) {}
 
   ngOnInit() {
@@ -48,55 +37,31 @@ export class HomePage implements OnInit {
     });
   }
 
-  onScan($event: any) {
-    // Obtener el ID de la asistencia del código QR.
-    const asistenciaId = $event.data.split('asistenciaId: ')[1];
-
-    // Marcar la asistencia del alumno como "presente".
-    this.alumnoServ
-      .actualizarAsistenciaAlumno(this.alumno.id, asistenciaId, true)
-      .subscribe(
-        () => {
-          // Mostrar un mensaje de confirmación.
-          this.toastController.create({
-            message: 'Asistencia registrada correctamente',
-            duration: 2000,
-          });
-        },
-        (error) => {
-          // Mostrar un mensaje de error.
-          this.toastController.create({
-            message: error.message,
-            duration: 2000,
-          });
-        }
-      );
+  async onScan($event: any) {
+   
   }
 
   ionViewWillEnter() {
-    this.getAlumnoByID(this.getIdFromURL());
+    this.getUserInfo();
   }
 
-  getIdFromURL() {
-    let url = this.router.url;
-    let arr = url.split('/', 3);
-    let id = String(arr[2]);
-    return id;
-  }
-
-  getAlumnoByID(alumnoID: String) {
-    this.alumnoServ.getAlumnoByid(alumnoID).subscribe(
-      (resp: any) => {
-        this.alumno = {
-          id: resp[0].id,
-          rut: resp[0].rut,
-          nombre: resp[0].nombre,
-          apellido: resp[0].apellido,
-          correo: resp[0].correo,
-          contrasena: resp[0].contrasena,
-          carrera: resp[0].carrera,
-          asistencias: resp[0].asistencias,
-        };
+  getUserInfo() {
+    this.afAuth.authState.subscribe(
+      (user) => {
+        if (user?.email) {
+          this.alumnoServ.getAlumnoByCorreo(user.email).subscribe(
+            (alumno) => {
+              this.alumno = alumno[0]; // Asumiendo que el servicio devuelve un array y quieres el primer elemento
+              console.log('Datos del alumno:', this.alumno);
+            },
+            (error) => {
+              console.error('Error al obtener datos del alumno:', error);
+            }
+          );
+        }
+      },
+      (error) => {
+        console.error('Error al obtener la información del usuario:', error);
       }
     );
   }
@@ -115,5 +80,11 @@ export class HomePage implements OnInit {
 
   login() {
     this.router.navigate(['login']);
+  }
+
+  logout() {
+    this.authService.logout().then(() => {
+      this.router.navigate(['/login']);
+    });
   }
 }

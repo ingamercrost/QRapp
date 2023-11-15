@@ -4,6 +4,7 @@ import { Alumno } from 'src/app/interfaces/alumno';
 import { UsuariosrandomService } from 'src/app/services/usuariosrandom.service';
 import { AlertController, NavController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Component({
   selector: 'app-agregar',
@@ -20,80 +21,103 @@ export class AgregarPage implements OnInit {
     private router: Router,
     public alertController: AlertController,
     private navCtrl: NavController,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private afAuth: AngularFireAuth
   ) {}
 
   ngOnInit() {
-    this.usuariosrandom.getRandomUser().subscribe((data) => {
-      this.user = data.results[0];
-      this.crearUsuarioAleatorio(this.user);
-    });
+    this.crear20Usuarios();
   }
 
-  crearUsuarioAleatorio(user: any) {
+  async crearUsuarioAleatorio(user: any) {
     if (user) {
-      const usuario = {
-        nombre: user.name.first,
-        correo: user.email,
-        contrasena: user.login.password,
-        rut: user.login.username,
-      };
+      const correo = user.email;
+      let contrasena = user.login.password;
 
-      localStorage.setItem('usuario', JSON.stringify(usuario));
-    }
-  }
+      // Verifica si la contraseña tiene menos de 6 caracteres y agrégale '1234'
+      if (contrasena.length < 6) {
+        contrasena += '1234';
+      }
 
-  crearAlumno(alumno: Alumno) {
-    // Usa AngularFirestore para crear un nuevo documento de alumno en la base de datos de Firestore
-    const docRef = this.firestore.collection<Alumno>('alumnos').add(alumno);
-  
-    // Actualiza el objeto Alumno con el ID generado
-    docRef.then((doc) => {
-      alumno.id = doc.id;
-  
-      // Actualiza la base de datos con el objeto Alumno que ahora contiene el ID
-      this.firestore.collection<Alumno>('alumnos').doc(alumno.id).update({ id: alumno.id }).then(() => {
-        console.log('Nuevo alumno creado con ID:', alumno.id);
-      });
-    });
-  }
-  
+      try {
+        // Crea el usuario en Firebase Authentication
+        const credential = await this.afAuth.createUserWithEmailAndPassword(correo, contrasena);
 
-  obtenerDatosAleatoriosYCrearAlumnos(cantidad: number) {
-    for (let i = 0; i < cantidad; i++) {
-      this.usuariosrandom.getRandomUser().subscribe((data: any) => {
-        const results = data.results[0];
+        // Obtiene el UID del usuario creado
+        const uid = credential.user?.uid;
+
+        // Guarda el usuario en el localStorage si es necesario
+        const usuario = {
+          nombre: user.name.first,
+          correo: correo,
+          contrasena: contrasena,
+          rut: user.login.username,
+          idFirebase: uid,
+        };
+
+        localStorage.setItem('usuario', JSON.stringify(usuario));
+
+        // Crea el nuevo alumno
         const newAlumno: Alumno = {
           rut: '123e',
-          nombre: results.name.first,
-          apellido: results.name.last,
-          correo: results.email,
-          contrasena: results.login.password,
+          nombre: user.name.first,
+          apellido: user.name.last,
+          correo: correo,
+          contrasena: contrasena,
           carrera: 'Carrera Aleatoria',
           clases: [],
           asistencias: [],
           id: ''
         };
 
-        // Crea el nuevo alumno
-        this.crearAlumno(newAlumno);
-      });
+        // Registra el nuevo alumno en Firestore
+        await this.crearAlumno(newAlumno);
+
+        // Devuelve el nuevo alumno para que se pueda mostrar en la consola
+        return newAlumno;
+      } catch (error) {
+        console.error('Error al crear el usuario en Firebase Authentication:', error);
+      }
     }
+
+    // Si hay un problema al crear el usuario, devuelve null
+    return null;
+  }
+
+  async crearAlumno(alumno: Alumno) {
+    // Usa AngularFirestore para crear un nuevo documento de alumno en la base de datos de Firestore
+    const docRef = await this.firestore.collection<Alumno>('alumnos').add(alumno);
+
+    // Actualiza el objeto Alumno con el ID generado
+    alumno.id = docRef.id;
+
+    // Actualiza la base de datos con el objeto Alumno que ahora contiene el ID
+    await this.firestore.collection<Alumno>('alumnos').doc(alumno.id).update({ id: alumno.id });
+
+    console.log('Nuevo alumno creado con ID:', alumno.id);
   }
 
   async crear20Usuarios() {
-    // Llama a la función para obtener datos aleatorios y crear 20 nuevos alumnos
-    this.obtenerDatosAleatoriosYCrearAlumnos(5);
+    for (let i = 0; i < 3; i++) {
+      const data = await this.usuariosrandom.getRandomUser().toPromise();
+      const results = data.results[0];
+      
+      if (results) {
+        const user = await this.crearUsuarioAleatorio(results);
 
-    // Muestra una alerta de éxito
+        if (user) {
+          console.log('Usuario creado:', user);
+        }
+      }
+    }
+
     const alert = await this.alertController.create({
       header: 'Usuarios Creados',
-      message: 'Se han creado 20 usuarios con éxito',
+      message: 'Se han creado 3 usuarios con éxito',
       buttons: [
         {
           text: 'Aceptar',
           handler: () => {
-            // Redirige al usuario a la página de inicio (u otra página)
             this.navCtrl.navigateForward('/homedocente');
           },
         },
