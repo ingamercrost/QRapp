@@ -63,6 +63,18 @@ actualizarAsistenciaAlumno(alumnoId: string, asistenciaId: string, presente: boo
       .collection('alumnos', (ref) => ref.where('correo', '==', correo))
       .valueChanges();
   }
+
+
+  marcarPresente(alumnoId: string, asistenciaId: string): Promise<void> {
+    // Actualiza el valor de 'presente' en la asistencia del alumno
+    const asistenciaRef = this.firestore
+      .collection('alumnos')
+      .doc(alumnoId)
+      .collection('asistencias')
+      .doc(asistenciaId);
+
+    return asistenciaRef.update({ presente: true });
+  }
 }
 
 

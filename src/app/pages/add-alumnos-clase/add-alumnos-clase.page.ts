@@ -17,7 +17,7 @@ export class AddAlumnosClasePage implements OnInit {
   clases: any[] = [];
   alumnoSeleccionado: string = '';
   claseSeleccionada: string = '';
-
+  
   constructor(
     private alumnosService: AlumnosService,
     private clasesService: SClasesService,
