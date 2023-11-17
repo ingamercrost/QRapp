@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { HomedocentePageRoutingModule } from './homedocente-routing.module';
-
+import { TranslateModule } from '@ngx-translate/core';
 import { HomedocentePage } from './homedocente.page';
 
 @NgModule({
@@ -13,7 +13,8 @@ import { HomedocentePage } from './homedocente.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    HomedocentePageRoutingModule
+    HomedocentePageRoutingModule,
+    TranslateModule
   ],
   declarations: [HomedocentePage]
 })

@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { CrudPageRoutingModule } from './crud-routing.module';
-
+import { TranslateModule } from '@ngx-translate/core';
 import { CrudPage } from './crud.page';
 
 @NgModule({
@@ -13,7 +13,8 @@ import { CrudPage } from './crud.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    CrudPageRoutingModule
+    CrudPageRoutingModule,
+    TranslateModule
   ],
   declarations: [CrudPage]
 })

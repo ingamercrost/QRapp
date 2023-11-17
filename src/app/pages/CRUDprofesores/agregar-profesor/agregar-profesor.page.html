@@ -3,11 +3,11 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home" color="dark"></ion-back-button>
     </ion-buttons>
-    <ion-title>Agregar</ion-title>
+    <ion-title>{{ 'Agregar' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content  [fullscreen]="true">
-  <ion-button class="btn" (click)="crear20Usuarios()">Crear 20 Usuarios</ion-button>
+  <ion-button class="btn" shape="round" color="warning" (click)="crear20Usuarios()">{{ 'Crear 20 Usuarios' | translate }}</ion-button>
 
 </ion-content>

@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { IniciarclasPageRoutingModule } from './iniciarclas-routing.module';
 import { IniciarclasPage } from './iniciarclas.page';
 import { DatePipe } from '@angular/common';
-
+import { TranslateModule } from '@ngx-translate/core';
 @NgModule({
   imports: [
     CommonModule,
@@ -16,7 +16,8 @@ import { DatePipe } from '@angular/common';
     IniciarclasPageRoutingModule,
     DatePipe,
     ReactiveFormsModule,
-    QRCodeModule
+    QRCodeModule,
+    TranslateModule
  // Agrega QrCodeModule a tus imports
   ],
   declarations: [IniciarclasPage],

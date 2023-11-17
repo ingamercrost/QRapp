@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { AddAlumnosClasePageRoutingModule } from './add-alumnos-clase-routing.module';
-
+import { TranslateModule } from '@ngx-translate/core';
 import { AddAlumnosClasePage } from './add-alumnos-clase.page';
 
 @NgModule({
@@ -13,7 +13,8 @@ import { AddAlumnosClasePage } from './add-alumnos-clase.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    AddAlumnosClasePageRoutingModule
+    AddAlumnosClasePageRoutingModule,
+    TranslateModule
   ],
   declarations: [AddAlumnosClasePage]
 })

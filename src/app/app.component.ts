@@ -21,8 +21,8 @@ export class AppComponent {
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
 
   constructor(private router: Router, private translateService: TranslateService, private geolocation: Geolocation) {
-    this.translateService.setDefaultLang('en');
-    this.translateService.addLangs(['es','en']);
+    this.translateService.setDefaultLang('ru');
+    this.translateService.addLangs(['es','en','ru']);
     this.getGeolocation();
   }
 

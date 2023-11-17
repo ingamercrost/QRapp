@@ -11,28 +11,26 @@
     <img src="https://upload.wikimedia.org/wikipedia/commons/a/aa/Logo_DuocUC.svg" />
 
     <ion-list *ngIf="alumno">
-      <ion-list *ngIf="alumno">
-        <ion-item>
-          <ion-label>Nombre</ion-label>
-          <ion-text>{{ alumno.nombre  || 'Nombre de Usuario' }} {{ alumno.apellido  }}</ion-text>
-        </ion-item>
-        <ion-item>
-          <ion-label>Correo</ion-label>
-          <ion-text>{{ alumno.correo || 'Correo de Usuario' }}</ion-text>
-        </ion-item>
-      </ion-list>
       <ion-item>
-        <ion-label position="floating">Asistencia ID</ion-label>
-        <ion-input [(ngModel)]="asistenciaIdInput" type="text"></ion-input>
+        <ion-label>{{ 'Nombre' | translate }}</ion-label>
+        <ion-text>{{ alumno.nombre }} {{ alumno.apellido}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{ 'Correo' | translate }}</ion-label>
+        <ion-text>{{ alumno.correo }}</ion-text>
       </ion-item>
     </ion-list>
+    <ion-item>
+      <ion-label position="floating">{{ 'Asistencia ID' | translate }}</ion-label>
+      <ion-input [(ngModel)]="asistenciaIdInput" type="text"></ion-input>
+    </ion-item>
 
-    <ion-button class="margin" (click)="detalle()" shape="round" color="warning">Detalle</ion-button>
-    <ion-button class="margin" (click)="asistencia()" shape="round" color="warning">Asistencia</ion-button>
+    <ion-button class="margin" (click)="detalle()" shape="round" color="warning">{{ 'Detalle' | translate }}</ion-button>
+    <ion-button class="margin" (click)="asistencia()" shape="round" color="warning">{{ 'Asistencia' | translate }}</ion-button>
 
     <!-- Modify the button to use the user-input asistenciaId -->
     <ion-button class="margin" (click)="marcarPresente()" shape="round" color="success">
-      Marcar Asistencia
+      {{ 'Marcar Asistencia' | translate }}
     </ion-button>
   </div>
 </ion-content>

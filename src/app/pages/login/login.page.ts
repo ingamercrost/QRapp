@@ -32,9 +32,12 @@ export class LoginPage {
     });
 
     this.langs = this.translateService.getLangs();
-    this.translateService.setDefaultLang('en');
-    this.translateService.addLangs(['es']);
+    this.translateService.setDefaultLang('ru');
+    this.translateService.addLangs(['es','en']);
     
+  }
+  changeLang(event:any) {
+    this.translateService.use(event.detail.value);
   }
 
   async login() {

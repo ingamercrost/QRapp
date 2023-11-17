@@ -3,39 +3,39 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/homedocente" color="dark"></ion-back-button>
     </ion-buttons>
-    <ion-title>Iniciar Clase</ion-title>
+    <ion-title>{{ 'Iniciar Clase' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
     <ion-item>
-      <ion-label position="stacked">Clase</ion-label>
+      <ion-label position="stacked">{{ 'clase' | translate }}</ion-label>
       <ion-select [(ngModel)]="newAsistencia.clase" (ionChange)="cargarAlumnosDeClase()">
         <ion-select-option *ngFor="let clase of clases" [value]="clase.id">{{clase.seccion}}</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked">Fecha</ion-label>
+      <ion-label position="stacked">{{ 'Fecha' | translate }}</ion-label>
       <ion-input [(ngModel)]="newAsistencia.fecha" type="date"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked">Profesor</ion-label>
+      <ion-label position="stacked">{{ 'profesor' | translate }}</ion-label>
       <ion-input [(ngModel)]="newAsistencia.profesor" type="text" [readonly]="true"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked">Alumnos</ion-label>
+      <ion-label position="stacked">{{ 'Alumnos' | translate }}</ion-label>
       <ion-select multiple="true" [(ngModel)]="newAsistencia.alumnos">
         <ion-select-option *ngFor="let alumno of alumnosDeClase" [value]="alumno.id">{{alumno.nombre}}</ion-select-option>
       </ion-select>
     </ion-item>
   </ion-list>
 
-  <!-- Otros elementos HTML -->
+  <!-- Other HTML elements -->
 
   <qrcode [qrdata]="codigoQR" [errorCorrectionLevel]="'M'"></qrcode>
 
-  <!-- Otros elementos HTML -->
+  <!-- Other HTML elements -->
 
-  <ion-button expand="full" (click)="crearAsistencia()">Crear Asistencia</ion-button>
+  <ion-button expand="full" (click)="crearAsistencia()">{{ 'Crear Asistencia' | translate }}</ion-button>
 </ion-content>

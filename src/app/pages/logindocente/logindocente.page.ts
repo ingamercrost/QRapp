@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
-
+import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-logindocente',
   templateUrl: './logindocente.page.html',
@@ -11,16 +11,25 @@ import { AlertController } from '@ionic/angular';
 export class LogindocentePage implements OnInit {
 
   formularioLoginDocente: FormGroup;
+  idioma!: string;
+  langs: string[] = [];
 
-  constructor(private router: Router, public fb: FormBuilder, public alertController: AlertController) { 
+  constructor(private router: Router, public fb: FormBuilder, public alertController: AlertController,private translateService: TranslateService) { 
     this.formularioLoginDocente = this.fb.group({
       'rut': new FormControl("", Validators.required),
       'correo': new FormControl("", Validators.required),
       'password': new FormControl("", Validators.required),
     });
+    this.langs = this.translateService.getLangs();
+    this.translateService.setDefaultLang('en');
+    this.translateService.addLangs(['es']);
+    
   }
 
   ngOnInit() {
+  }
+  changeLanguage(language: string) {
+    this.translateService.use(language);
   }
 
   async loginDocente() {

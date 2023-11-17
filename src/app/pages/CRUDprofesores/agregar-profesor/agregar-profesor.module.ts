@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { AgregarProfesorPageRoutingModule } from './agregar-profesor-routing.module';
-
+import { TranslateModule } from '@ngx-translate/core';
 import { AgregarProfesorPage } from './agregar-profesor.page';
 
 @NgModule({
@@ -13,7 +13,8 @@ import { AgregarProfesorPage } from './agregar-profesor.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    AgregarProfesorPageRoutingModule
+    AgregarProfesorPageRoutingModule,
+    TranslateModule
   ],
   declarations: [AgregarProfesorPage]
 })
