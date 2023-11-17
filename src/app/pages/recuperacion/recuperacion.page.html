@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/login" color="dark"></ion-back-button>
     </ion-buttons>
-    <ion-title>recuperacion</ion-title>
+    <ion-title>Recuperación</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -12,7 +12,7 @@
     <ion-card class="card">
       <ion-card-header>
         <ion-card-subtitle>
-          Ingrese su correo y a continuacion se le enviara un mensaje de recuperacion de su contraseña
+          Ingrese su correo y a continuación se le enviará un mensaje de recuperación de su contraseña
         </ion-card-subtitle>
       </ion-card-header>
       
@@ -23,10 +23,8 @@
             <ion-input formControlName="correo"></ion-input>
           </ion-item>
         </form>
-        <ion-button class="button" color="warning" (click)=recuperar() shape="round">Enviar</ion-button>
+        <ion-button class="button" color="warning" (click)="recuperar()" shape="round">Enviar</ion-button>
       </ion-card-content>
-
-
     </ion-card>
   </div>
 </ion-content>
