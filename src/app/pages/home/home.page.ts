@@ -96,6 +96,10 @@ export class HomePage implements OnInit {
     const presentData = {
       fecha: new Date(),
       // Add more fields as needed
+      ubicacion: {
+        latitud: null,  // Puedes establecer valores por defecto o null si la ubicación aún no está disponible
+        longitud: null,
+      },
     };
   
     // Ensure 'alumno' is defined before accessing its properties
@@ -113,24 +117,35 @@ export class HomePage implements OnInit {
         latestAsistenciaIndex >= 0 &&
         !this.alumno.asistencias[latestAsistenciaIndex].presente
       ) {
-        // Update the existing 'asistencia' entry
-        this.alumno.asistencias[latestAsistenciaIndex] = {
-          presente: true,
-          asistenciaId: 'x1Byt3VucOtZi1UQYX8Q', // You can generate a unique ID or use an existing one
-          alumnoId: this.alumno.id,
-          // Add more fields as needed
-        };
+        // Get the current location
+        this.getCurrentLocation()
+          .then((location) => {
+            // Update the existing 'asistencia' entry with location information
+            this.alumno.asistencias[latestAsistenciaIndex] = {
+              presente: true,
+              asistenciaId: 'x1Byt3VucOtZi1UQYX8Q', // You can generate a unique ID or use an existing one
+              alumnoId: this.alumno.id,
+              ubicacion: {
+                latitud: location.latitude,
+                longitud: location.longitude,
+              },
+              // Add more fields as needed
+            };
   
-        // Log the data before updating Firestore
-        console.log('Data to be updated in Firestore:', this.alumno);
+            // Log the data before updating Firestore
+            console.log('Data to be updated in Firestore:', this.alumno);
   
-        // Update the Firestore document with the modified 'asistencias' array
-        this.firestore.collection('alumnos').doc(this.alumno.id).update(this.alumno)
-          .then(() => {
-            console.log('Asistencia marcada exitosamente.');
+            // Update the Firestore document with the modified 'asistencias' array
+            this.firestore.collection('alumnos').doc(this.alumno.id).update(this.alumno)
+              .then(() => {
+                console.log('Asistencia marcada exitosamente.');
+              })
+              .catch((error) => {
+                console.error('Error al marcar asistencia:', error);
+              });
           })
           .catch((error) => {
-            console.error('Error al marcar asistencia:', error);
+            console.error('Error al obtener la ubicación:', error);
           });
       } else {
         console.error('Error: Latest asistencia is already marked as present or does not exist.');
@@ -138,6 +153,15 @@ export class HomePage implements OnInit {
     } else {
       console.error('Error: "alumno" is undefined or does not have an "id" property.');
     }
+  }
+  
+  getCurrentLocation(): Promise<{ latitude: number, longitude: number }> {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => resolve({ latitude: position.coords.latitude, longitude: position.coords.longitude }),
+        (error) => reject(error)
+      );
+    });
   }
   
 }
