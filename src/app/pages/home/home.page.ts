@@ -7,6 +7,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable } from 'rxjs/internal/Observable';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',

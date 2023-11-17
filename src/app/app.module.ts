@@ -16,17 +16,21 @@ import { environment } from 'src/environments/environment';
 
 import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import {Geolocation} from '@awesome-cordova-plugins/geolocation/ngx';
+
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule, 
+    
     IonicModule.forRoot(), 
     AppRoutingModule, 
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
+    
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -35,8 +39,10 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
       }
     }),
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    Geolocation],
   bootstrap: [AppComponent],
+  
 })
 export class AppModule {}
 export function HttpLoaderFactory(httpClient: HttpClient) {
