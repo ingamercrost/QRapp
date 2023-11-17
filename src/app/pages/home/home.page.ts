@@ -92,7 +92,7 @@ export class HomePage implements OnInit {
   }
 
   // Function to mark attendance in Firestore
-  marcarPresente() {
+  async marcarPresente() {
     const presentData = {
       fecha: new Date(),
       // Add more fields as needed
@@ -123,7 +123,7 @@ export class HomePage implements OnInit {
             // Update the existing 'asistencia' entry with location information
             this.alumno.asistencias[latestAsistenciaIndex] = {
               presente: true,
-              asistenciaId: 'x1Byt3VucOtZi1UQYX8Q', // You can generate a unique ID or use an existing one
+              asistenciaId: this.alumno.asistencias[latestAsistenciaIndex].asistenciaId,
               alumnoId: this.alumno.id,
               ubicacion: {
                 latitud: location.latitude,
