@@ -8,7 +8,7 @@
 
 <ion-content class="ion-padding">
   <div class="img">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/a/aa/Logo_DuocUC.svg" />
+    <img *ngIf="alumno && alumno.avatar" [src]="alumno.avatar" />
 
     <ion-list *ngIf="alumno">
       <ion-item>
@@ -25,21 +25,36 @@
       <ion-input [(ngModel)]="asistenciaIdInput" type="text"></ion-input>
     </ion-item>
 
+    
+
     <ion-button class="margin" (click)="detalle()" shape="round" color="warning">{{ 'Detalle' | translate }}</ion-button>
     <ion-button class="margin" (click)="asistencia()" shape="round" color="warning">{{ 'Asistencia' | translate }}</ion-button>
-
-    <!-- Modify the button to use the user-input asistenciaId -->
     <ion-button class="margin" (click)="marcarPresente()" shape="round" color="success">
       {{ 'Marcar Asistencia' | translate }}
     </ion-button>
+    <ion-label>{{ 'Consejo :' | translate }}</ion-label>
+    <ion-item *ngIf="advice">
+      
+      <ion-text>{{ advice }}</ion-text>
+    </ion-item>
   </div>
 </ion-content>
+
+
 
 <ion-fab class="padd" slot="fixed" vertical="bottom" horizontal="end">
   <ion-fab-button>
     <ion-icon name="chevron-up-circle" color="dark"></ion-icon>
   </ion-fab-button>
   <ion-fab-list side="top">
-    <!-- Other fab buttons as needed -->
+    <ion-fab-button (click)="login()">
+      <ion-icon name="log-in"></ion-icon>
+    </ion-fab-button>
+
+    
+
+    <ion-fab-button (click)="detalle()">
+      <ion-icon name="eye"></ion-icon>
+    </ion-fab-button>
   </ion-fab-list>
 </ion-fab>

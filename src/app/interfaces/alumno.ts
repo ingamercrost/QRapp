@@ -8,6 +8,7 @@ export interface Alumno {
   carrera: string;
   clases: String[];
   asistencias: Asistencia[];
+  avatar: string;
 }
 
 export interface Asistencia {

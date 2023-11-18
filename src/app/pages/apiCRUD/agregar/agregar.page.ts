@@ -5,6 +5,7 @@ import { UsuariosrandomService } from 'src/app/services/usuariosrandom.service';
 import { AlertController, NavController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { HttpClient } from '@angular/common/http'; // Importa el módulo HttpClient
 
 @Component({
   selector: 'app-agregar',
@@ -22,7 +23,8 @@ export class AgregarPage implements OnInit {
     public alertController: AlertController,
     private navCtrl: NavController,
     private firestore: AngularFirestore,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private http: HttpClient // Agrega esta línea
   ) {}
 
   ngOnInit() {
@@ -57,7 +59,10 @@ export class AgregarPage implements OnInit {
 
         localStorage.setItem('usuario', JSON.stringify(usuario));
 
-        // Crea el nuevo alumno
+        // Obtiene el avatar de la API de avatares (Adorable Avatars en este caso)
+        const avatarUrl = `https://robohash.org/${uid}.png`;
+
+        // Crea el nuevo alumno con el avatar
         const newAlumno: Alumno = {
           rut: '123e',
           nombre: user.name.first,
@@ -67,7 +72,8 @@ export class AgregarPage implements OnInit {
           carrera: 'Carrera Aleatoria',
           clases: [],
           asistencias: [],
-          id: ''
+          id: '',
+          avatar: avatarUrl, // Agrega el avatar a la propiedad del alumno
         };
 
         // Registra el nuevo alumno en Firestore
@@ -101,7 +107,7 @@ export class AgregarPage implements OnInit {
     for (let i = 0; i < 3; i++) {
       const data = await this.usuariosrandom.getRandomUser().toPromise();
       const results = data.results[0];
-      
+
       if (results) {
         const user = await this.crearUsuarioAleatorio(results);
 

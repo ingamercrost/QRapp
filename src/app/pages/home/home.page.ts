@@ -6,6 +6,7 @@ import { AlertController, ToastController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable } from 'rxjs/internal/Observable';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -27,10 +28,13 @@ export class HomePage implements OnInit {
     private alumnoServ: AlumnosService,
     private ngZone: NgZone,
     private afAuth: AngularFireAuth,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private http: HttpClient,
   ) {}
 
   ngOnInit() {
+    this.getAdvice();
+
     this.qrcode.loadFiles().subscribe((scannedData) => {
       this.ngZone.run(() => {
         this.onScan(scannedData);
@@ -154,6 +158,23 @@ export class HomePage implements OnInit {
       console.error('Error: "alumno" is undefined or does not have an "id" property.');
     }
   }
+  advice: string = ''; // Agrega esta línea
+  async getAdvice() {
+    const adviceApiUrl = 'https://api.adviceslip.com/advice';
+    
+    this.http.get<any>(adviceApiUrl).subscribe(
+      (data) => {
+        if (data && data.slip && data.slip.advice) {
+          this.advice = data.slip.advice;
+        } else {
+          console.error('No se pudo obtener un consejo de la API.');
+        }
+      },
+      (error) => {
+        console.error('Error al obtener un consejo de la API:', error);
+      }
+    );
+  }
   
   getCurrentLocation(): Promise<{ latitude: number, longitude: number }> {
     return new Promise((resolve, reject) => {
@@ -163,5 +184,7 @@ export class HomePage implements OnInit {
       );
     });
   }
+
+  
   
 }
