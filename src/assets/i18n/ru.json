@@ -26,8 +26,8 @@
     "Crear 20 Usuarios": "Создать 20 пользователей",
     "Listar": "Список",
     "Iniciar Clase": "Начать урок",
-    "Selecciona un estudiante": "Выберите студента",
-    "Selecciona una clase": "Выберите класс",
+    "Selecciona un estudiante :": "Выберите студента :",
+    "Selecciona una clase :": "Выберите класс :",
     "Agregar Estudiante a Clase": "Добавить студента в класс",
     "Clases Registradas": "Зарегистрированные классы",
     "Mostrar Clases": "Показать классы",
@@ -39,6 +39,7 @@
     "Asistencia ID": "ID посещаемости",
     "Detalle": "Подробности",
     "Asistencia": "Посещаемость",
-    "Marcar Asistencia": "Пометить посещаемость"
+    "Marcar Asistencia": "Пометить посещаемость",
+    "Agregar" : "Учитель"
   }
   

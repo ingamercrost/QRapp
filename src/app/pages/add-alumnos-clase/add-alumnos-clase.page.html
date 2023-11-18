@@ -9,14 +9,14 @@
 
 <ion-content>
   <ion-item>
-    <ion-label class="laa">{{ 'Selecciona un estudiante:' | translate }}</ion-label>
+    <ion-label class="laa">{{ 'Selecciona un estudiante :' | translate }}</ion-label>
     <ion-select [(ngModel)]="alumnoSeleccionado">
       <ion-select-option *ngFor="let alumno of alumnos; trackBy: trackById" [value]="alumno.id">{{ alumno.nombre }}</ion-select-option>
     </ion-select>
   </ion-item>
 
   <ion-item>
-    <ion-label class="laa">{{ 'Selecciona una clase:' | translate }}</ion-label>
+    <ion-label class="laa">{{ 'Selecciona una clase :' | translate }}</ion-label>
     <ion-select [(ngModel)]="claseSeleccionada">
       <ion-select-option *ngFor="let clase of clases; trackBy: trackById" [value]="clase.id">{{ clase.seccion }}</ion-select-option>
     </ion-select>

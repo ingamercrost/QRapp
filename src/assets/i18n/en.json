@@ -26,8 +26,8 @@
     "Crear 20 Usuarios": "Create 20 Users",
     "Listar": "List",
     "Iniciar Clase": "Start Class",
-    "Selecciona un estudiante": "Select a student",
-    "Selecciona una clase": "Select a class",
+    "Selecciona un estudiante :": "Select a student",
+    "Selecciona una clase :": "Select a class",
     "Agregar Estudiante a Clase": "Add Student to Class",
     "Clases Registradas": "Registered Classes",
     "Mostrar Clases": "Show Classes",
@@ -39,6 +39,7 @@
     "Asistencia ID": "Attendance ID",
     "Detalle": "Details",
     "Asistencia": "Attendance",
-    "Marcar Asistencia": "Mark Attendance"
+    "Marcar Asistencia": "Mark Attendance",
+    "Agregar" : "Agregar"
 }
 
