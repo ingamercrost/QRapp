@@ -4,7 +4,8 @@ import { Profesor } from 'src/app/interfaces/profesor';
 import { ProfesoresService } from 'src/app/services/profesores.service';
 import { HttpClient } from '@angular/common/http';
 import { UsuariosrandomService } from 'src/app/services/usuariosrandom.service';
-import { AlertController, NavController } from '@ionic/angular'; // Importa AlertController y NavController
+import { AlertController, NavController } from '@ionic/angular';
+import { AngularFireAuth } from '@angular/fire/compat/auth'; // Importa AngularFireAuth
 
 @Component({
   selector: 'app-agregar-profesor',
@@ -17,69 +18,99 @@ export class AgregarProfesorPage implements OnInit {
 
   constructor(
     private usuariosrandom: UsuariosrandomService,
-    private ProfesorServ: ProfesoresService,
+    private profesorServ: ProfesoresService,
     private router: Router,
     private http: HttpClient,
-    public alertController: AlertController, // Agrega AlertController
-    private navCtrl: NavController // Agrega NavController
+    public alertController: AlertController,
+    private navCtrl: NavController,
+    private afAuth: AngularFireAuth // Agrega AngularFireAuth
   ) {}
 
   ngOnInit() {
+    // Puedes cargar un usuario aleatorio cuando se inicializa la página
     this.usuariosrandom.getRandomUser().subscribe((data) => {
       this.user = data.results[0];
-      this.crearUsuarioAleatorio(this.user);
     });
   }
 
-  crearUsuarioAleatorio(user: any) {
+  async crearUsuarioAleatorio(user: any) {
     if (user) {
-      var usuario = {
-        rut: user.login.username,
-        nombre: user.name.first,
-        apellido: user.name.last,
-        correo: user.email,
-        contrasena: user.login.password,
-      };
-
-      localStorage.setItem('usuario', JSON.stringify(usuario));
+      const correo = user.email;
+      let contrasena = user.login.password;
+  
+      // Verifica si la contraseña tiene menos de 6 caracteres y agrégale '1234'
+      if (contrasena.length < 6) {
+        contrasena += '1234';
+      }
+  
+      try {
+        // Crea el usuario en Firebase Authentication
+        const credential = await this.afAuth.createUserWithEmailAndPassword(correo, contrasena);
+  
+        // Obtiene el UID del usuario creado
+        const uid = credential.user?.uid;
+  
+        // Guarda el usuario en el localStorage si es necesario
+        const usuario = {
+          rut: user.login.username,
+          nombre: user.name.first,
+          apellido: user.name.last,
+          correo: correo,
+          contrasena: contrasena,
+          idFirebase: uid,
+        };
+  
+        localStorage.setItem('usuario', JSON.stringify(usuario));
+  
+        // Crea el nuevo profesor
+        const newProfesor: Profesor = {
+          rut: user.login.username,
+          nombre: user.name.first,
+          apellido: user.name.last,
+          correo: correo,
+          contrasena: contrasena,
+          clases: [],
+          asistencias: [],
+        };
+  
+        // Crea el profesor en Firestore
+        await this.crearProfesor(newProfesor);
+  
+        // Devuelve el nuevo profesor para que se pueda mostrar en la consola
+        return newProfesor;
+      } catch (error) {
+        console.error('Error al crear el usuario en Firebase Authentication:', error);
+      }
     }
+  
+    // Si hay un problema al crear el usuario, devuelve null
+    return null;
   }
+  
 
-  crearProfesor(profesor: Profesor) {
-    this.ProfesorServ.CrearProfesores(profesor).subscribe(() => {
+  async crearProfesor(profesor: Profesor) {
+    // Usa el servicio ProfesoresService para agregar el nuevo profesor a Firestore
+    this.profesorServ.CrearProfesores(profesor).then(() => {
       console.log('Nuevo profesor creado');
     });
   }
 
-  // Función para obtener datos aleatorios y crear 20 nuevos profesores
-  obtenerDatosAleatoriosYCrearProfesores(cantidad: number) {
-    for (let i = 0; i < cantidad; i++) {
-      this.http.get('https://randomuser.me/api/').subscribe((data: any) => {
-        const results = data.results[0];
-        const newProfesor: Profesor = {
-          rut: results.login.username,
-          nombre: results.name.first,
-          apellido: results.name.last,
-          correo: results.email,
-          contrasena: results.login.password,
-          clases: [],
-          asistencias: [],
-        };
-
-        // Crea el nuevo profesor
-        this.crearProfesor(newProfesor);
-      });
-    }
-  }
-
   async crear20Usuarios() {
-    // Llama a la función para obtener datos aleatorios y crear 20 nuevos profesores
-    this.obtenerDatosAleatoriosYCrearProfesores(20);
+    // Obtiene 20 usuarios aleatorios
+    for (let i = 0; i < 1; i++) {
+      const data = await this.usuariosrandom.getRandomUser().toPromise();
+      const results = data.results[0];
+
+      if (results) {
+        // Crea el usuario aleatorio
+        await this.crearUsuarioAleatorio(results);
+      }
+    }
 
     // Muestra una alerta de éxito
     const alert = await this.alertController.create({
-      header: 'Usuarios Creados',
-      message: 'Se han creado 20 usuarios con éxito',
+      header: 'Profesores Creados',
+      message: 'Se han creado 20 profesores con éxito',
       buttons: [
         {
           text: 'Aceptar',

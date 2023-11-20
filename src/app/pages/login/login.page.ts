@@ -32,8 +32,8 @@ export class LoginPage {
     });
 
     this.langs = this.translateService.getLangs();
-    this.translateService.setDefaultLang('ru');
-    this.translateService.addLangs(['es','en']);
+    this.translateService.setDefaultLang('es');
+    this.translateService.addLangs(['ru','en']);
     
   }
   changeLang(event:any) {
