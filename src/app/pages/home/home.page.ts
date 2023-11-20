@@ -50,6 +50,44 @@ export class HomePage implements OnInit {
     this.getUserInfo();
   }
 
+  getCurrentLocationDetails(): Promise<{ latitude: number, longitude: number, locationName: string }> {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const location = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          };
+
+          // Obtén el nombre de la ubicación
+          this.getLocationName(location.latitude, location.longitude)
+            .then((locationName) => {
+              resolve({ ...location, locationName });
+            })
+            .catch((error) => {
+              console.error('Error al obtener el nombre de la ubicación:', error);
+              resolve({ ...location, locationName: 'Nombre de la ubicación no disponible' });
+            });
+        },
+        (error) => reject(error)
+      );
+    });
+  }
+
+  getLocationName(latitude: number, longitude: number): Promise<string> {
+    const apiKey = 'AIzaSyDmNEAWcuAQTbunBFCYRLMJGJPAPrnI-yg'; // Reemplaza con tu clave de API
+
+    const geocodingUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
+
+    return this.http.get<any>(geocodingUrl).toPromise().then((data) => {
+      if (data.results && data.results.length > 0) {
+        return data.results[0].formatted_address;
+      } else {
+        throw new Error('No se pudo obtener el nombre de la ubicación.');
+      }
+    });
+  }
+
   getUserInfo() {
     this.afAuth.authState.subscribe(
       (user) => {
@@ -97,67 +135,56 @@ export class HomePage implements OnInit {
 
   // Function to mark attendance in Firestore
   async marcarPresente() {
-    const presentData = {
-      fecha: new Date(),
-      // Add more fields as needed
-      ubicacion: {
-        latitud: null,  // Puedes establecer valores por defecto o null si la ubicación aún no está disponible
-        longitud: null,
-      },
-    };
-  
-    // Ensure 'alumno' is defined before accessing its properties
-    if (this.alumno && this.alumno.id) {
-      // Check if 'asistencias' array exists
-      if (!this.alumno.asistencias) {
-        this.alumno.asistencias = [];
-      }
-  
-      // Find the index of the latest 'asistencia' entry (assuming it's the last one)
-      const latestAsistenciaIndex = this.alumno.asistencias.length - 1;
-  
-      // Check if the latest 'asistencia' entry exists and is not marked as present
-      if (
-        latestAsistenciaIndex >= 0 &&
-        !this.alumno.asistencias[latestAsistenciaIndex].presente
-      ) {
-        // Get the current location
-        this.getCurrentLocation()
-          .then((location) => {
-            // Update the existing 'asistencia' entry with location information
-            this.alumno.asistencias[latestAsistenciaIndex] = {
-              presente: true,
-              asistenciaId: this.alumno.asistencias[latestAsistenciaIndex].asistenciaId,
-              alumnoId: this.alumno.id,
-              ubicacion: {
-                latitud: location.latitude,
-                longitud: location.longitude,
-              },
-              // Add more fields as needed
-            };
-  
-            // Log the data before updating Firestore
-            console.log('Data to be updated in Firestore:', this.alumno);
-  
-            // Update the Firestore document with the modified 'asistencias' array
-            this.firestore.collection('alumnos').doc(this.alumno.id).update(this.alumno)
-              .then(() => {
-                console.log('Asistencia marcada exitosamente.');
-              })
-              .catch((error) => {
-                console.error('Error al marcar asistencia:', error);
-              });
-          })
-          .catch((error) => {
-            console.error('Error al obtener la ubicación:', error);
-          });
-      } else {
-        console.error('Error: Latest asistencia is already marked as present or does not exist.');
+  // Ensure 'alumno' is defined before accessing its properties
+  if (this.alumno && this.alumno.id) {
+    // Check if 'asistencias' array exists
+    if (!this.alumno.asistencias) {
+      this.alumno.asistencias = [];
+    }
+
+    // Find the index of the latest 'asistencia' entry (assuming it's the last one)
+    const latestAsistenciaIndex = this.alumno.asistencias.length - 1;
+
+    // Check if the latest 'asistencia' entry exists and is not marked as present
+    if (
+      latestAsistenciaIndex >= 0 &&
+      !this.alumno.asistencias[latestAsistenciaIndex].presente
+    ) {
+      try {
+        // Get the current location details
+        const locationDetails = await this.getCurrentLocationDetails();
+
+        // Update the existing 'asistencia' entry with location information
+        this.alumno.asistencias[latestAsistenciaIndex] = {
+          presente: true,
+          asistenciaId: this.alumno.asistencias[latestAsistenciaIndex].asistenciaId,
+          alumnoId: this.alumno.id,
+          ubicacion: {
+            latitud: locationDetails.latitude,
+            longitud: locationDetails.longitude,
+            nombre: locationDetails.locationName,
+          },
+          // Add more fields as needed
+        };
+
+        // Log the data before updating Firestore
+        console.log('Data to be updated in Firestore:', this.alumno);
+
+        // Update the Firestore document with the modified 'asistencias' array
+        await this.firestore.collection('alumnos').doc(this.alumno.id).update(this.alumno);
+
+        console.log('Asistencia marcada exitosamente.');
+      } catch (error) {
+        console.error('Error al marcar asistencia:', error);
       }
     } else {
-      console.error('Error: "alumno" is undefined or does not have an "id" property.');
+      console.error('Error: Latest asistencia is already marked as present or does not exist.');
     }
+  } else {
+    console.error('Error: "alumno" is undefined or does not have an "id" property.');
   }
+}
+
   advice: string = ''; // Agrega esta línea
   async getAdvice() {
     const adviceApiUrl = 'https://api.adviceslip.com/advice';
