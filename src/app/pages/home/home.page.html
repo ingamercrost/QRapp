@@ -3,11 +3,16 @@
     <ion-buttons slot="start">
       <ion-menu-button auto-hide="false"></ion-menu-button>
     </ion-buttons>
+    
+    <!-- Agregar la imagen centrada -->
+    <ion-title class="logo-title">
+      <img src="https://reqlut2.s3.sa-east-1.amazonaws.com/reqlut-images/duoc/logo_duoc_white.png?v=53.9" class="img-logo" alt="Logo" style="display: block; margin: 0 auto;">
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div class="img">
+  <div class="img"  style="margin-top: -30px;">
     <img *ngIf="alumno && alumno.avatar" [src]="alumno.avatar" />
 
     <ion-list *ngIf="alumno">
@@ -23,24 +28,26 @@
     <ion-item>
       <ion-label position="floating">{{ 'Asistencia ID' | translate }}</ion-label>
       <ion-input [(ngModel)]="asistenciaIdInput" type="text"></ion-input>
+      
     </ion-item>
-
+    <ion-button class="margin" (click)="marcarPresente()" shape="round" color="success">
+      {{ 'Marca Asistencia' | translate }}
+    </ion-button>
     
 
     <ion-button class="margin" (click)="detalle()" shape="round" color="warning">{{ 'Detalle' | translate }}</ion-button>
     <ion-button class="margin" (click)="asistencia()" shape="round" color="warning">{{ 'Asistencia' | translate }}</ion-button>
-    <ion-button class="margin" (click)="marcarPresente()" shape="round" color="success">
-      {{ 'Marcar Asistencia' | translate }}
-    </ion-button>
     <ion-label>{{ 'Consejo :' | translate }}</ion-label>
     <ion-item *ngIf="advice">
       
       <ion-text>{{ advice }}</ion-text>
     </ion-item>
   </div>
+
+  
 </ion-content>
 
-
+  
 
 <ion-fab class="padd" slot="fixed" vertical="bottom" horizontal="end">
   <ion-fab-button>
