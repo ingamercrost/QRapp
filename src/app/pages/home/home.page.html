@@ -4,7 +4,7 @@
       <ion-menu-button auto-hide="false"></ion-menu-button>
     </ion-buttons>
     
-    <!-- Agregar la imagen centrada -->
+    <!-- Logo centrado -->
     <ion-title class="logo-title">
       <img src="https://reqlut2.s3.sa-east-1.amazonaws.com/reqlut-images/duoc/logo_duoc_white.png?v=53.9" class="img-logo" alt="Logo" style="display: block; margin: 0 auto;">
     </ion-title>
@@ -13,46 +13,55 @@
 
 <ion-content class="ion-padding">
   <div class="img"  style="margin-top: -30px;">
+    <!-- Imagen del alumno (si existe) -->
     <img *ngIf="alumno && alumno.avatar" [src]="alumno.avatar" />
 
+    
+
+    <!-- Información del alumno -->
     <ion-list *ngIf="alumno">
       <ion-item>
         <ion-label>{{ 'Nombre' | translate }}</ion-label>
-        <ion-text>{{ alumno.nombre }} {{ alumno.apellido}}</ion-text>
+        <ion-text>{{ alumno.nombre }} {{ alumno.apellido }}</ion-text>
       </ion-item>
       <ion-item>
         <ion-label>{{ 'Correo' | translate }}</ion-label>
         <ion-text>{{ alumno.correo }}</ion-text>
       </ion-item>
+      
     </ion-list>
+
+    <!-- Campo de entrada para la ID de asistencia -->
     <ion-item>
       <ion-label position="floating">{{ 'Asistencia ID' | translate }}</ion-label>
       <ion-input [(ngModel)]="asistenciaIdInput" type="text"></ion-input>
-      
     </ion-item>
+
+    
+
+    <!-- Botones para marcar asistencia y ver asistencias -->
     <ion-button class="margin" (click)="marcarPresente()" shape="round" color="success">
       {{ 'Marca Asistencia' | translate }}
     </ion-button>
-    
 
-    
-    <ion-button class="margin" (click)="asistencia()" shape="round" color="warning">{{ 'Asistencia' | translate }}</ion-button>
+    <ion-button class="margin" (click)="asistencia()" shape="round" color="warning">
+      {{ 'Asistencia' | translate }}
+    </ion-button>
+
+    <!-- Consejo (si está disponible) -->
     <ion-label>{{ 'Consejo :' | translate }}</ion-label>
     <ion-item *ngIf="advice">
-      
       <ion-text>{{ advice }}</ion-text>
     </ion-item>
   </div>
-
-  
 </ion-content>
-
-  
 
 <ion-fab class="padd" slot="fixed" vertical="bottom" horizontal="end">
   <ion-fab-button>
     <ion-icon name="chevron-up-circle" color="dark"></ion-icon>
   </ion-fab-button>
+
+  <!-- Botones adicionales en el menú flotante -->
   <ion-fab-list side="top">
     <ion-fab-button (click)="login()">
       <ion-icon name="log-in"></ion-icon>

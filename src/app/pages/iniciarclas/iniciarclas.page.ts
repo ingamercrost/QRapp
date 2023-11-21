@@ -77,6 +77,7 @@ export class IniciarclasPage implements OnInit {
                 asistenciaId: this.newAsistencia.id,
                 alumnoId: alumno.id,
                 presente: this.newAsistencia.alumnos.includes(alumno.id),
+                fecha: this.newAsistencia.fecha
               }));
 
               this.actualizarAlumnosAsistencia(asistenciaAlumnos);

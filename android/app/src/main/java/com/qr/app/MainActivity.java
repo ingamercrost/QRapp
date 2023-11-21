@@ -1,4 +1,4 @@
-package CL.DUOCQR;
+package com.qr.app;
 
 import com.getcapacitor.BridgeActivity;
 

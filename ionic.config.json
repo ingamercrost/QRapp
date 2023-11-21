@@ -1,5 +1,7 @@
 {
   "name": "NPCAPP3",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }
