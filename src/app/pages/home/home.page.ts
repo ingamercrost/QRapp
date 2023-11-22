@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { Component, OnInit, NgZone, Inject } from '@angular/core';
-import { NgxScannerQrcodeService } from 'ngx-scanner-qrcode';
+import { NgxScannerQrcodeService, ScannerQRCodeSelectedFiles } from 'ngx-scanner-qrcode'; // Importa ScannerQRCodeSelectedFiles
 import { AlumnosService } from 'src/app/services/alumnos.service';
 import { AlertController, ToastController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -8,7 +8,6 @@ import { Observable } from 'rxjs/internal/Observable';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { HttpClient } from '@angular/common/http';
 import { Asistencia } from 'src/app/interfaces/asistencia'; // Ajusta la ruta según tu estructura de archivos
-
 
 @Component({
   selector: 'app-home',
@@ -21,6 +20,7 @@ export class HomePage implements OnInit {
   authService: any;
   asistenciaIdInput: string = '';
   ultimasAsistencias: Asistencia[] = [];
+  showScanner: boolean = false;
 
   constructor(
     @Inject(NgxScannerQrcodeService) private qrcode: NgxScannerQrcodeService,
@@ -36,16 +36,30 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     this.getAdvice();
-
-    this.qrcode.loadFiles().subscribe((scannedData) => {
-      this.ngZone.run(() => {
-        this.onScan(scannedData);
-      });
+  
+    this.qrcode.loadFiles().subscribe((scannedData: ScannerQRCodeSelectedFiles[]) => {
+      if (scannedData && scannedData.length > 0) {
+        // Supongamos que deseas utilizar solo el primer elemento escaneado
+        const firstScan = scannedData[0].file;
+        this.ngZone.run(() => {
+          this.onScan(firstScan);
+        });
+      }
     });
   }
 
-  async onScan($event: any) {
-    // Implement your logic for handling scanned data here
+  async onScan(scannedFile: File) {
+    // Implementa la lógica para manejar los datos escaneados aquí
+    // Puedes mostrar un alert, un toast o realizar otras acciones según tus necesidades
+  
+    // Supongamos que deseas utilizar el nombre del archivo como dato escaneado
+    const scannedData = scannedFile.name;
+  
+    console.log('QR Code Scanned:', scannedData);
+  
+    // Aquí puedes agregar la lógica para marcar la asistencia con el ID escaneado
+    this.asistenciaIdInput = scannedData;
+    this.marcarPresente();
   }
 
   ionViewWillEnter() {
@@ -56,20 +70,17 @@ export class HomePage implements OnInit {
     if (this.alumno && this.alumno.asistencias) {
       // Ordena las asistencias por fecha de forma descendente
       // Dentro de la función obtenerUltimasAsistencias
-    // Dentro de la función obtenerUltimasAsistencias
-    const asistenciasOrdenadas = this.alumno.asistencias.sort((a: Asistencia, b: Asistencia) => {
-      const fechaA = Date.parse(a.fecha as string);
-      const fechaB = Date.parse(b.fecha as string);
-    
-      if (!isNaN(fechaA) && !isNaN(fechaB)) {
-        return fechaB - fechaA;
-      } else {
-        console.error('Error al parsear las fechas.');
-        return 0; // o alguna lógica para manejar el caso de error
-      }
-    });
-
-
+      const asistenciasOrdenadas = this.alumno.asistencias.sort((a: Asistencia, b: Asistencia) => {
+        const fechaA = Date.parse(a.fecha as string);
+        const fechaB = Date.parse(b.fecha as string);
+      
+        if (!isNaN(fechaA) && !isNaN(fechaB)) {
+          return fechaB - fechaA;
+        } else {
+          console.error('Error al parsear las fechas.');
+          return 0; // o alguna lógica para manejar el caso de error
+        }
+      });
 
       // Toma las primeras 3 asistencias
       this.ultimasAsistencias = asistenciasOrdenadas.slice(0, 3);
@@ -290,7 +301,4 @@ export class HomePage implements OnInit {
       );
     });
   }
-
-  
-  
 }

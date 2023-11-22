@@ -12,11 +12,9 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div class="img"  style="margin-top: -30px;">
+  <div class="img" style="margin-top: -30px;">
     <!-- Imagen del alumno (si existe) -->
     <img *ngIf="alumno && alumno.avatar" [src]="alumno.avatar" />
-
-    
 
     <!-- Información del alumno -->
     <ion-list *ngIf="alumno">
@@ -28,7 +26,6 @@
         <ion-label>{{ 'Correo' | translate }}</ion-label>
         <ion-text>{{ alumno.correo }}</ion-text>
       </ion-item>
-      
     </ion-list>
 
     <!-- Campo de entrada para la ID de asistencia -->
@@ -37,7 +34,10 @@
       <ion-input [(ngModel)]="asistenciaIdInput" type="text"></ion-input>
     </ion-item>
 
-    
+    <!-- Mostrar el escáner de código QR -->
+    <div *ngIf="showScanner">
+      <ngx-scanner-qrcode></ngx-scanner-qrcode>
+    </div>
 
     <!-- Botones para marcar asistencia y ver asistencias -->
     <ion-button class="margin" (click)="marcarPresente()" shape="round" color="success">
