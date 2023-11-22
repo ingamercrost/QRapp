@@ -51,7 +51,6 @@ export class AgregarPage implements OnInit {
         {
           text: 'Aceptar',
           handler: () => {
-            this.router.navigateByUrl('/listar_clases');
           }
         }
       ]
