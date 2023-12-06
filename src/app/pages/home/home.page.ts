@@ -112,7 +112,7 @@ export class HomePage implements OnInit {
   }
 
   getLocationName(latitude: number, longitude: number): Promise<string> {
-    const apiKey = 'AIzaSyDmNEAWcuAQTbunBFCYRLMJGJPAPrnI-yg'; // Reemplaza con tu clave de API
+    const apiKey = 'AIzaSyCBDQbhfbnWxl0gz_NKizDYIiPlpNk24DM'; // Reemplaza con tu clave de API
 
     const geocodingUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
 

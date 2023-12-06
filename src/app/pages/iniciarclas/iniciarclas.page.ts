@@ -41,14 +41,20 @@ export class IniciarclasPage implements OnInit {
 
   cargarAlumnosDeClase() {
     const claseSeleccionada = this.newAsistencia.clase;
-
+  
     const claseSeleccionadaInfo = this.clases.find((clase) => clase.id === claseSeleccionada);
-
+  
     if (claseSeleccionadaInfo) {
       this.newAsistencia.profesor = claseSeleccionadaInfo.profesor;
-      this.alumnosDeClase = this.alumnos.filter((alumno) =>
-        alumno.clases.includes(claseSeleccionada)
-      );
+      const alumnosDeClase = this.alumnos.filter((alumno) => {
+        if (alumno.clases) {
+          return alumno.clases.includes(claseSeleccionada);
+        } else {
+          return false;
+        }
+      });
+  
+      this.alumnosDeClase = alumnosDeClase;
     } else {
       console.error('La clase no existe en la base de datos.');
     }
